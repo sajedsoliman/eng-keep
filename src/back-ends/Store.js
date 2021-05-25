@@ -4,10 +4,11 @@ import { db, firebase } from "./database";
 // Helpers - info
 import { dicApiReq } from "../helpers/info";
 import Helpers from "./HelperFunctions";
+import { getDateOnPeriod } from "../helpers/functions";
 
 function Store() {
 	// Get the needed helpers function
-	const { handleGetImages, handleGetMoreWordInfo } = Helpers();
+	const { handleGetImages, handleGetMoreWordInfo, wordDicAbility } = Helpers();
 
 	// Get the word list depending on the param (category) for now
 	const handleGetWordListOnCategory = (category, setList) => {
@@ -27,6 +28,23 @@ function Store() {
 		return db
 			.collection("words")
 			.orderBy("timestamp", "desc")
+			.onSnapshot((snapshot) => {
+				const words = snapshot.docs.map((doc) => ({ id: doc.id, word: doc.data() }));
+
+				setList(words);
+			});
+	};
+
+	// get word list depends on the given period
+	const handleGetTodayWordList = (period, setList) => {
+		const startDate = getDateOnPeriod(period).startDate;
+		// Which is today - endDate
+		const endDate = getDateOnPeriod(period).endDate;
+		return db
+			.collection("words")
+			.orderBy("timestamp", "desc")
+			.where("timestamp", ">=", startDate)
+			.where("timestamp", "<=", endDate)
 			.onSnapshot((snapshot) => {
 				const words = snapshot.docs.map((doc) => ({ id: doc.id, word: doc.data() }));
 
@@ -55,15 +73,31 @@ function Store() {
 
 		// Get the (audio src) & more (Synonyms, sentences) the https://dictionaryapi.dev/
 		const moreInfo = await handleGetMoreWordInfo(wordData.word);
-		db.collection("words").add({
+
+		// The sentences that I provide must be highlighted, so I provide an extra prop here
+		const mySentences = sentences.map((sentence) => ({ ...sentence, userProvided: true }));
+
+		const dbWord = {
 			timestamp: firebase.firestore.FieldValue.serverTimestamp(),
 			word,
 			category,
 			images,
-			sentences: [...moreInfo.sentences, ...sentences],
-			synonyms: [...synonyms, ...moreInfo.synonyms],
-			wordAudio: moreInfo.audioSrc,
-		});
+			sentences: [...mySentences],
+			synonyms: [...synonyms],
+			...(moreInfo === "word does not exist"
+				? {
+						sentences: [...mySentences],
+						synonyms: [...synonyms],
+						wordAudio: "",
+				  }
+				: {
+						sentences: [...moreInfo.sentences, ...mySentences],
+						synonyms: [...synonyms, ...moreInfo.synonyms],
+						wordAudio: moreInfo.audioSrc,
+				  }),
+		};
+
+		db.collection("words").add(dbWord);
 	};
 
 	// Handle delete word by id
@@ -83,6 +117,8 @@ function Store() {
 		handleGetAudioSrc,
 		handleDeleteWord,
 		handleUpdateWord,
+		wordDicAbility,
+		handleGetTodayWordList,
 	};
 }
 

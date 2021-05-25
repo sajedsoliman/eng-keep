@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Route, Switch, useLocation } from "react-router";
 
 // UI
@@ -13,12 +13,15 @@ import { PlusIcon } from "@heroicons/react/outline";
 // Info (from helpers)
 import { homepageTabs, PATHS, wordDataInitialValues } from "../helpers/info";
 
+// Util
+import IF from "../common-components/util/IF";
+
 // Components
 import Store from "../back-ends/Store";
 import WordList from "./word-list/WordList";
 import SingleWord from "./single-word/SingleWord";
 import WordForm from "../forms/WordForm";
-import IF from "../common-components/util/IF";
+import PeriodMenu from "./PeriodMenu";
 
 // Style
 const useStyles = makeStyles((theme) => ({
@@ -63,6 +66,9 @@ const useStyles = makeStyles((theme) => ({
 export default function EngKeep({ items }) {
 	const classes = useStyles();
 
+	// Refs
+	const dateTabRef = useRef();
+
 	// Router
 	const location = useLocation();
 
@@ -75,9 +81,13 @@ export default function EngKeep({ items }) {
 	const [filteredWordList, setFilteredWordList] = useState([]);
 	const [addWordPopupOpen, setPopupOpen] = useState(false);
 	const [searchText, setSearchText] = useState("");
+	const [period, setPeriod] = useState("today");
+	const [periodMenuOpen, setPeriodMenuOpen] = useState(false);
 
 	// Import Store component to fetch the word list
-	const { handleGetWordListOnCategory, handleGetWholeWordList } = Store();
+	const { handleGetWordListOnCategory, handleGetWholeWordList, handleGetTodayWordList } = Store();
+
+	console.log(period);
 
 	// Set a listener to track the current tab and fetch the apt data
 	useEffect(() => {
@@ -94,7 +104,11 @@ export default function EngKeep({ items }) {
 			let category = "pronunciation";
 			if (currPath === "/new-words") category = "new";
 
-			unsubscribe = handleGetWordListOnCategory(category, setWordList);
+			if (currPath === PATHS.BY_DATE) {
+				unsubscribe = handleGetTodayWordList(period, setWordList);
+			} else {
+				unsubscribe = handleGetWordListOnCategory(category, setWordList);
+			}
 		}
 
 		return () => {
@@ -104,7 +118,7 @@ export default function EngKeep({ items }) {
 			// Empty the word list
 			setWordList([]);
 		};
-	}, [currentTab]);
+	}, [currentTab, period]);
 
 	// Set a listener to track the search text and change the list according to it with the respect of the curr category
 	useEffect(() => {
@@ -149,10 +163,24 @@ export default function EngKeep({ items }) {
 		dividers: true,
 	};
 
+	// handle toggle the period menu
+	const handleTogglePeriodMenu = () => {
+		setPeriodMenuOpen((prev) => !prev);
+	};
+
+	// handle change period
+	const handleChangePeriod = (newPeriod) => {
+		setPeriod(newPeriod);
+	};
+
 	return (
 		<main className="bg-gray-100 min-h-screen">
 			{/* Tabs themselves */}
-			<HomepageTabs {...tabsProps} />
+			<HomepageTabs
+				handleTogglePeriodMenu={handleTogglePeriodMenu}
+				tabRef={dateTabRef}
+				{...tabsProps}
+			/>
 
 			{/* Each tab content depending on the current tab */}
 			<section
@@ -202,6 +230,14 @@ export default function EngKeep({ items }) {
 					handleClosePopup={handleTogglePopup}
 				/>
 			</PopUp>
+
+			{/* Period menu dropdown */}
+			<PeriodMenu
+				open={periodMenuOpen}
+				anchorEl={dateTabRef.current}
+				handleChangePeriod={handleChangePeriod}
+				handleTogglePeriodMenu={handleTogglePeriodMenu}
+			/>
 		</main>
 	);
 }

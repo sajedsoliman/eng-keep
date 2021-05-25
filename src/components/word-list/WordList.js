@@ -9,8 +9,8 @@ function WordList({ list }) {
 	const mappedWords = list.map((wordDoc) => {
 		const { id, word } = wordDoc;
 		return (
-			<Grid item xs={12} md={6} lg={4}>
-				<WordCard key={id} wordData={word} id={id} />
+			<Grid item xs={12} md={6} lg={4} key={id}>
+				<WordCard wordData={word} id={id} />
 			</Grid>
 		);
 	});

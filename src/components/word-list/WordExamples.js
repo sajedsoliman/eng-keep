@@ -9,13 +9,15 @@ function WordExamples({ sentences, word }) {
 	const mappedSentences = sentences
 		.sort(() => Math.random() - 0.5)
 		.slice(0, 3)
-		.map((sentence) => {
-			const keywordRegex = new RegExp(`(${word})\\w*`, "gi");
+		.map(({ body, id, userProvided }) => {
+			// word.slice(0, word.length - 1) to handle the (e) in most of words like accus(e)ing
+			const keywordRegex = new RegExp(`(${word.slice(0, word.length - 1)})\\w*`, "gi");
+			const ownSensStyle = "text-red-400";
 			return (
-				sentence !== "" && (
-					<li className="mb-2 leading-5 text-sm">
-						{parse(sentence.body.replace(keywordRegex, `<span class='underline'>$&</span>`))}
-						{sentence.body.includes(".") ? "" : "."}
+				body !== "" && (
+					<li key={id} className={`mb-2 leading-5 text-sm  ${userProvided && ownSensStyle}`}>
+						{parse(body.replace(keywordRegex, `<span class='underline'>$&</span>`))}
+						{body.includes(".") ? "" : "."}
 					</li>
 				)
 			);

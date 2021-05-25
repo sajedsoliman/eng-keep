@@ -47,7 +47,7 @@ function FormList({ list, setList, inputLabel, listLabel, wrapperClassName }) {
 	const mappedForms = list.map((itemForm) => {
 		return (
 			<ItemForm
-				key={itemForm.order}
+				key={itemForm.id}
 				value={itemForm}
 				handleUpdate={handleUpdateItem}
 				handleDelete={handleDeleteItem}

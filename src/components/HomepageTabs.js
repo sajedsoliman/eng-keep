@@ -5,6 +5,7 @@ import { makeStyles, Tabs, Tab } from "@material-ui/core";
 
 // Hooks
 import useWindowWidth from "../hooks/useWindowWidth";
+import { PATHS } from "../helpers/info";
 
 // styles
 const useStyles = makeStyles((theme) => ({
@@ -14,7 +15,15 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function HomepageTabs({ currentTab, tabs, handleChangeTab, isWrapped, indClr = "black" }) {
+function HomepageTabs({
+	currentTab,
+	tabs,
+	handleChangeTab,
+	tabRef,
+	isWrapped,
+	indClr = "black",
+	handleTogglePeriodMenu,
+}) {
 	const classes = useStyles();
 
 	// Get the window width to decide the wrapped property if it is enabled
@@ -27,8 +36,8 @@ function HomepageTabs({ currentTab, tabs, handleChangeTab, isWrapped, indClr = "
 			key={index}
 			label={tab.label}
 			to={tab.path}
-			// {...(isWrapped ? wrapping : {})}
 			component={RouterLink}
+			{...(tab.path === PATHS.BY_DATE ? { ref: tabRef, onClick: handleTogglePeriodMenu } : {})}
 		/>
 	));
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // UI
 import { Button } from "@material-ui/core";
@@ -24,10 +24,16 @@ function WordForm({ wordData, handleClosePopup, action, wordDocId }) {
 	// State vars
 	const [sens, setSens] = useState(sentences);
 	const [syns, setSyns] = useState(synonyms);
+	const [wordAvailability, setWordAvailability] = useState("");
 
 	// Import useForm
 	const formInitialValues = { word, category };
 	const { values: wordInfo, inputCommonProps } = useForm(formInitialValues, false);
+
+	// blank the wordAvailability if the word changes
+	useEffect(() => {
+		setWordAvailability("");
+	}, [wordInfo.word]);
 
 	// Sentences form list props
 	const sensFormListProps = {
@@ -48,8 +54,9 @@ function WordForm({ wordData, handleClosePopup, action, wordDocId }) {
 	};
 
 	// Import the Store component to add the word to the db
-	const { handleUpdateWord, handleAddWord } = Store();
+	const { handleUpdateWord, handleAddWord, wordDicAbility } = Store();
 
+	// handle add the word
 	const handleSubmit = () => {
 		const word = {
 			category: wordInfo.category.toLowerCase(),
@@ -68,6 +75,15 @@ function WordForm({ wordData, handleClosePopup, action, wordDocId }) {
 			handleAddWord(word);
 		}
 	};
+
+	// handle check word availability
+	const handleCheckWord = async () => {
+		const msg = `${!(await wordDicAbility(wordInfo.word)) ? "Not" : ""} Available`;
+		setWordAvailability(msg);
+	};
+
+	// Word availability style
+	const availabilityMsgStyle = wordAvailability == "Available" ? "green" : "red";
 
 	return (
 		<Form onSubmit={handleSubmit}>
@@ -95,11 +111,19 @@ function WordForm({ wordData, handleClosePopup, action, wordDocId }) {
 				<FormList {...synonymsFormListProps} />
 			</div>
 
-			{/* Submit button */}
-			<div className="mt-5">
+			{/* action => Submit button & check word availability in the dictionary */}
+			<div className="mt-5 flex space-x-2">
 				<Button type="submit" color="secondary" variant="outlined">
 					<span className="capitalize">{action}</span>
 				</Button>
+
+				<div className="flex items-center">
+					<Button onClick={handleCheckWord} type="button" color="primary" variant="outlined">
+						<span className="capitalize">Check Word</span>
+					</Button>
+
+					<p className={`ml-2 text-sm text-${availabilityMsgStyle}-600`}>{wordAvailability}</p>
+				</div>
 			</div>
 		</Form>
 	);

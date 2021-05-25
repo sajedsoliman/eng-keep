@@ -14,3 +14,8 @@ html,
 body {
 	font-family: Poppins;
 }
+
+button:focus,
+input:focus {
+	outline: none;
+}

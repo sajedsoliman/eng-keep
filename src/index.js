@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 
 // style
 import { ThemeProvider } from "@material-ui/styles";
+import { CssBaseline } from "@material-ui/core";
 import "./styles/style.css";
 import theme from "./styles/theme";
 
@@ -15,6 +16,7 @@ ReactDOM.render(
 	<React.StrictMode>
 		<ThemeProvider theme={theme}>
 			<Router>
+				<CssBaseline />
 				<App />
 			</Router>
 		</ThemeProvider>

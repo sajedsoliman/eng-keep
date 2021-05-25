@@ -20,6 +20,8 @@ function Helpers() {
 		const data =
 			await res.json(); /* Return an array of words, so I need to target the first one below */
 		const wordObj = data[0];
+		if (wordObj === undefined) return "word does not exist";
+
 		const audioSrc = wordObj.phonetics[0].audio;
 		const definitions = wordObj.meanings.map((meaning) => meaning.definitions).flat();
 		const exampleSentences = [];
@@ -54,7 +56,18 @@ function Helpers() {
 		};
 	};
 
-	return { handleGetImages, handleGetMoreWordInfo };
+	// Check words ability to be fetched from the https://dictionaryapi.dev/ api
+	const wordDicAbility = async (word) => {
+		const res = await fetch(dicApiReq(word));
+		const data =
+			await res.json(); /* Return an array of words, so I need to target the first one below */
+		const wordObj = data[0];
+		if (wordObj === undefined) return false;
+
+		return true;
+	};
+
+	return { handleGetImages, handleGetMoreWordInfo, wordDicAbility };
 }
 
 export default Helpers;

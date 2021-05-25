@@ -2,6 +2,7 @@ const PATHS = {
 	NEW_WORDS: "/new-words",
 	PRONUNCIATION: "/properly-pronunciation-words",
 	ALL_WORDS: "/",
+	BY_DATE: "/sort-by-date",
 };
 
 const homepageTabs = [
@@ -16,6 +17,10 @@ const homepageTabs = [
 	{
 		label: "pronunciation",
 		path: PATHS.PRONUNCIATION,
+	},
+	{
+		label: "sort by date",
+		path: PATHS.BY_DATE,
 	},
 	/* {
 		label: "add",
@@ -39,6 +44,25 @@ const unsplashApiReq = (query) =>
 
 const dicApiReq = (word) => `https://api.dictionaryapi.dev/api/v2/entries/en_US/${word}`;
 
+const DATE_SORTING_PERIODS = [
+	{
+		label: "Today",
+		period: "today",
+	},
+	{
+		label: "Yesterday",
+		period: "yesterday",
+	},
+	{
+		label: "Last Week",
+		period: "last-week",
+	},
+	{
+		label: "Last Month",
+		period: "last-month",
+	},
+];
+
 export {
 	homepageTabs,
 	PATHS,
@@ -47,4 +71,5 @@ export {
 	FORM_LIST_INITIAL_VALUE,
 	unsplashApiReq,
 	dicApiReq,
+	DATE_SORTING_PERIODS,
 };
