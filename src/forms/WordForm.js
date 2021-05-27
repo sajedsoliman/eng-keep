@@ -3,20 +3,21 @@ import { useEffect, useState } from "react";
 // UI
 import { Button } from "@material-ui/core";
 import Controls from "../common-components/controls/Controls";
+import FormList from "../common-components/ui/form-list/FormList";
 
 // Icons
-import { PlusCircleIcon } from "@heroicons/react/outline";
 
 // Hooks
 import { Form, useForm } from "../hooks/useForm";
+
+// Util
+import IF from "../common-components/util/IF";
 
 // Info
 import { WORD_CATEGORIES } from "../helpers/info";
 
 // Components
 import Store from "../back-ends/Store";
-import FormList from "../common-components/ui/form-list/FormList";
-import IF from "../common-components/util/IF";
 
 function WordForm({ wordData, handleClosePopup, action, wordDocId }) {
 	const { sentences, synonyms, category, word } = wordData;
@@ -25,8 +26,6 @@ function WordForm({ wordData, handleClosePopup, action, wordDocId }) {
 	const [sens, setSens] = useState(sentences);
 	const [syns, setSyns] = useState(synonyms);
 	const [wordAvailability, setWordAvailability] = useState("");
-
-	console.log(sens);
 
 	// Import useForm
 	const formInitialValues = { word, category };
@@ -89,6 +88,7 @@ function WordForm({ wordData, handleClosePopup, action, wordDocId }) {
 
 	return (
 		<Form onSubmit={handleSubmit}>
+			{/* Word input */}
 			<div className="mb-3">
 				<Controls.TextInput
 					InputProps={{ autoFocus: true, autoComplete: "off" }}
@@ -96,24 +96,25 @@ function WordForm({ wordData, handleClosePopup, action, wordDocId }) {
 				/>
 			</div>
 
+			{/* category input */}
 			<Controls.SelectBoxInput
 				items={WORD_CATEGORIES}
 				{...inputCommonProps("Category", "category", wordInfo.category)}
 			/>
 
+			{/* Sentences forms list */}
 			<div className="my-3">
-				{/* Sentences form list */}
 				<FormList {...sensFormListProps} />
 			</div>
 
-			{/* <Divider orientation="horizontal" /> */}
+			{/* <Divider orientation="horizontal" /> Just to remember it */}
 
+			{/* Sentences forms list */}
 			<div className="mt-6">
-				{/* Sentences form list */}
 				<FormList {...synonymsFormListProps} />
 			</div>
 
-			{/* action => Submit button & check word availability in the dictionary */}
+			{/* action => Submit(add, update) button & check word availability in the dictionary */}
 			<div className="mt-5 flex space-x-2">
 				<Button type="submit" color="secondary" variant="outlined">
 					<span className="capitalize">{action}</span>
@@ -121,7 +122,7 @@ function WordForm({ wordData, handleClosePopup, action, wordDocId }) {
 
 				<div className="flex items-center">
 					<Button onClick={handleCheckWord} type="button" color="primary" variant="outlined">
-						<span className="capitalize">Check Word</span>
+						<span className="capitalize">Check Word In Dic</span>
 					</Button>
 
 					<p className={`ml-2 text-sm text-${availabilityMsgStyle}-600`}>{wordAvailability}</p>

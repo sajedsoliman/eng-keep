@@ -7,9 +7,9 @@ import { Grid } from "@material-ui/core";
 import WordCard from "./WordCard";
 
 export const WordList = React.memo(
-	({ list, lastWordRef }) => {
+	({ list }) => {
 		// mapping through the given word list
-		const mappedWords = list.map((wordDoc, index) => {
+		const mappedWords = list.map((wordDoc) => {
 			const { id, word } = wordDoc;
 			const gridProps = {
 				item: true,
@@ -19,14 +19,6 @@ export const WordList = React.memo(
 				key: id,
 			};
 
-			/* 			if (list.length - 1 === index) {
-				return (
-					<Grid ref={lastWordRef} {...gridProps}>
-						<WordCard wordData={word} id={id} />
-					</Grid>
-				);
-			}
- */
 			return (
 				<Grid {...gridProps}>
 					<WordCard wordData={word} id={id} />
@@ -41,6 +33,7 @@ export const WordList = React.memo(
 		);
 	},
 	(prevProps, currProps) => {
+		// If the list didn't change don't render it again
 		if (prevProps.list === currProps.list) {
 			return true;
 		}

@@ -45,35 +45,30 @@ function WordControls({ handleRemoveWord, handleShowImage, wordData, id, wordIma
 		dividers: true,
 	};
 
+	// Button props
+	const btnProps = (icon, onClickHandler) => ({
+		color: "inherit",
+		size: "small",
+		onClick: onClickHandler,
+		startIcon: icon,
+	});
+
 	return (
-		<div className="mt-2 space-x-3 flex">
+		<div className="mt-2 space-x-3 flex justify-center">
 			{/* Delete Word */}
 			<Button
-				color="inherit"
-				onClick={handleConfirmDeleteWordOpen}
-				size="small"
-				startIcon={<TrashIcon className="h-5 text-red-500" />}
+				{...btnProps(<TrashIcon className="h-5 text-red-500" />, handleConfirmDeleteWordOpen)}
 			>
 				Delete
 			</Button>
 
 			{/* Show Word's image */}
-			<Button
-				color="inherit"
-				onClick={handleShowImage}
-				size="small"
-				startIcon={<PhotographIcon className="h-5 text-green-600" />}
-			>
+			<Button {...btnProps(<PhotographIcon className="h-5 text-green-600" />, handleShowImage)}>
 				Show {wordImage !== "" ? "Def" : "Image"}
 			</Button>
 
 			{/* update Word */}
-			<Button
-				color="inherit"
-				onClick={handleTogglePopup}
-				size="small"
-				startIcon={<PencilIcon className="h-5 text-blue-700" />}
-			>
+			<Button {...btnProps(<TrashIcon className="h-5 text-blue-700" />, handleTogglePopup)}>
 				Edit
 			</Button>
 

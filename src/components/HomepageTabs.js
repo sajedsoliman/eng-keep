@@ -10,14 +10,13 @@ import { makeStyles, Tabs, Tab } from "@material-ui/core";
 import useWindowWidth from "../hooks/useWindowWidth";
 
 // Info
-import { PATHS } from "../helpers/info";
+import { PATHS, homepageTabs } from "../helpers/info";
 
 // Components
 import PeriodMenu from "./PeriodMenu";
 
 // styles
 const useStyles = makeStyles((theme) => ({
-	indicator: {},
 	tabsRoot: {
 		background: "white",
 	},
@@ -25,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
 
 function HomepageTabs({
 	currentTab,
-	tabs,
 	handleChangeTab,
 	isWrapped,
 	indClr = "black",
@@ -35,7 +33,7 @@ function HomepageTabs({
 	const classes = useStyles();
 
 	// refs
-	const dateTabRef = useRef();
+	const sortByDateTabRef = useRef();
 
 	// State vars
 	const [periodMenuOpen, setPeriodMenuOpen] = useState(false);
@@ -49,14 +47,18 @@ function HomepageTabs({
 	};
 
 	// const wrapping = windowWidth <= 600 ? { wrapped: true } : {};
+
 	// map through tabs
-	const mappedTabs = tabs.map((tab, index) => (
+	const mappedTabs = homepageTabs.map((tab) => (
 		<Tab
 			key={tab.label}
 			label={tab.label}
 			to={tab.path}
 			component={RouterLink}
-			{...(tab.path === PATHS.BY_DATE ? { ref: dateTabRef, onClick: handleTogglePeriodMenu } : {})}
+			{...(tab.path === PATHS.BY_DATE && {
+				ref: sortByDateTabRef,
+				onClick: handleTogglePeriodMenu,
+			})}
 		/>
 	));
 
@@ -71,10 +73,7 @@ function HomepageTabs({
 				classes={{ root: classes.tabsRoot }}
 				onChange={handleChangeTab}
 				TabIndicatorProps={{ style: indicatorStyles }}
-				orientation="horizontal"
 				value={currentTab}
-				// variant={windowWidth <= 600 ? "scrollable" : "fullWidth"}
-				scrollButtons={"on"}
 				centered
 			>
 				{mappedTabs}
@@ -83,7 +82,7 @@ function HomepageTabs({
 			{/* Period menu dropdown */}
 			<PeriodMenu
 				open={periodMenuOpen}
-				anchorEl={dateTabRef.current}
+				anchorEl={sortByDateTabRef.current}
 				currentPeriod={period}
 				handleChangePeriod={handleChangePeriod}
 				handleTogglePeriodMenu={handleTogglePeriodMenu}

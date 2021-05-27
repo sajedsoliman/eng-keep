@@ -24,13 +24,17 @@ function ItemForm({ handleUpdate, handleDelete, label, value, lastNewAddedFormId
 
 	useEffect(() => {
 		// Add a condition not to set inputValue on load
-		if (result != "") setInputValue(result);
+		if (result != "") {
+			handleUpdate(value.id, result);
+			setInputValue(result);
+		}
 	}, [result]);
 
+	// Set a listener to track the last added form and autofocus it when it gets added
 	useEffect(() => {
 		// handle focus the last added new form's input
 		if (lastNewAddedFormId === value.id) {
-			formInputRef.e.target.querySelector("input").focus();
+			formInputRef.current.querySelector("input").focus();
 		}
 	}, [lastNewAddedFormId]);
 
@@ -38,6 +42,7 @@ function ItemForm({ handleUpdate, handleDelete, label, value, lastNewAddedFormId
 	const handleDeleteItem = () => {
 		// Stop the mic if is already starting
 		handleStartStopListening();
+
 		handleDelete(value.id);
 	};
 
@@ -54,7 +59,7 @@ function ItemForm({ handleUpdate, handleDelete, label, value, lastNewAddedFormId
 			/>
 
 			<div className="flex">
-				{/* button for focus state */}
+				{/* using the IconButton for focusing state */}
 				<IconButton onClick={handleStartStopListening} color="primary" size="small">
 					{listeningIcon}
 				</IconButton>

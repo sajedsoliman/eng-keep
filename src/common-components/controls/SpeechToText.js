@@ -50,7 +50,7 @@ function SpeechToText() {
 	const listeningIcon = isListening ? (
 		<StopIcon className="h-6 text-red-500" />
 	) : (
-		<MicrophoneIcon className="h-6 " />
+		<MicrophoneIcon className="h-6" />
 	);
 
 	return {

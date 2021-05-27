@@ -15,13 +15,20 @@ const useStyles = makeStyles((theme) => ({
 function PeriodMenu({ open, anchorEl, handleChangePeriod, handleTogglePeriodMenu, currentPeriod }) {
 	const classes = useStyles();
 
+	//  handle click on the menu item (period item)
+	const handleClickItem = (period) => {
+		// Change the curr period
+		handleChangePeriod(period);
+
+		// Close the menu
+		handleTogglePeriodMenu();
+	};
+
+	// Map through date period
 	const mappedPeriods = DATE_SORTING_PERIODS.map(({ label, period }) => (
 		<MenuItem
 			key={label}
-			onClick={() => {
-				handleChangePeriod(period);
-				handleTogglePeriodMenu();
-			}}
+			onClick={() => handleClickItem(period)}
 			className={currentPeriod === period && classes.activeItem}
 		>
 			{label}
@@ -30,6 +37,7 @@ function PeriodMenu({ open, anchorEl, handleChangePeriod, handleTogglePeriodMenu
 
 	return (
 		<CustomMenuList open={open} anchorEl={anchorEl} placement={"center"}>
+			{/* away listener to close the menu as we click outside of the menu */}
 			<ClickAwayListener onClickAway={handleTogglePeriodMenu}>
 				<div className="w-44">
 					<MenuList autoFocusItem>{mappedPeriods}</MenuList>

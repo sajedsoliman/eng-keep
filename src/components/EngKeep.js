@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Route, Switch, useLocation } from "react-router";
 
 // UI
@@ -13,9 +13,9 @@ import { PlusIcon } from "@heroicons/react/outline";
 // Info (from helpers)
 import {
 	DEFAULT_WORD_LIST_LIMIT,
-	homepageTabs,
 	PATHS,
 	wordDataInitialValues,
+	homepageTabs,
 } from "../helpers/info";
 
 // Util
@@ -68,11 +68,8 @@ const useStyles = makeStyles((theme) => ({
 	alanBtnWrapper: {},
 }));
 
-export default function EngKeep({ items }) {
+export default function EngKeep() {
 	const classes = useStyles();
-
-	// Refs
-	const wordListRef = useRef();
 
 	// Router
 	const location = useLocation();
@@ -80,46 +77,18 @@ export default function EngKeep({ items }) {
 	// Set the tab depending on the current router path
 	const routerTab = homepageTabs.findIndex((tab) => tab.path === location.pathname);
 
-	// wind
-
 	// State vars
 	const [currentTab, setCurrentTab] = useState(routerTab);
 	const [wordList, setWordList] = useState(null);
 	const [filteredWordList, setFilteredWordList] = useState([]);
-	const [addWordPopupOpen, setPopupOpen] = useState(false);
+	const [addWordFormPopupOpen, setPopupOpen] = useState(false);
 	const [searchText, setSearchText] = useState("");
 	const [period, setPeriod] = useState("today");
 	const [limit, setLimit] = useState(DEFAULT_WORD_LIST_LIMIT);
 
 	// Import Store component to fetch the word list
-	const {
-		handleGetWordListOnCategory,
-		handleGetWholeWordList,
-		handleGetWordListByDate,
-		loading,
-		itemsCount,
-	} = Store();
-
-	/* const observer = useRef();
-	const lastWordElementRef = useCallback(
-		(node) => {
-			if (loading) return;
-			//sd
-			if (observer.current) observer.current.disconnect();
-			observer.current = new IntersectionObserver((entries) => {
-				if (entries[0].isIntersecting && limit < itemsCount) {
-					setLimit((prev) => prev + DEFAULT_WORD_LIST_LIMIT);
-				}
-			});
-			if (node) observer.current.observe(node);
-		},
-		[loading, itemsCount]
-	); */
-
-	// console.log(itemsCount);
-	// console.log(limit);
-
-	console.log(loading);
+	const { handleGetWordListOnCategory, handleGetWholeWordList, handleGetWordListByDate, loading } =
+		Store();
 
 	// Set a listener to track the current tab and fetch the apt data
 	useEffect(() => {
@@ -149,7 +118,6 @@ export default function EngKeep({ items }) {
 	// Set a listener to reset the limit when the currTab or period gets changed
 	useEffect(() => {
 		setLimit(DEFAULT_WORD_LIST_LIMIT);
-		setWordList([]);
 	}, [currentTab, period]);
 
 	useEffect(() => {
@@ -180,15 +148,14 @@ export default function EngKeep({ items }) {
 	const tabsProps = {
 		currentTab,
 		handleChangeTab,
-		tabs: homepageTabs,
-		isWrapped: true,
+		isWrapped: true /* Decide wether the label of the tabs should wrap or not */,
 	};
 
 	// Add word popup props
 	const PopUpProps = {
 		infoFunc: {
 			title: "Add a new word",
-			isOpen: addWordPopupOpen,
+			isOpen: addWordFormPopupOpen,
 		},
 		closeHandle: handleTogglePopup,
 		maxWidth: "sm",
@@ -201,29 +168,29 @@ export default function EngKeep({ items }) {
 		setPeriod(newPeriod);
 	};
 
-	const wordListComponent = (
-		<WordList /* lastWordRef={lastWordElementRef} */ list={filteredWordList} />
-	);
+	const wordListComponent = <WordList list={filteredWordList} />;
 
 	return (
 		<main className="bg-gray-100 min-h-screen">
-			{/* Tabs themselves */}
+			{/* App Tabs => done */}
 			<HomepageTabs handleChangePeriod={handleChangePeriod} period={period} {...tabsProps} />
 
 			{/* Each tab content depending on the current tab */}
-			<section ref={wordListRef} className={`${classes.wordListWrapper} p-4`}>
-				{/* Search Box - if the path is anything but tabs (don't show it) */}
+			<section className={`${classes.wordListWrapper} p-4`}>
+				{/* Search Box - if the path is anything but word-listed tabs (all, new, pronunciation) */}
+				{/* Anything but a single word page */}
 				<IF condition={Object.values(PATHS).includes(location.pathname)}>
 					<div className="m-auto w-full md:w-6/12 mb-4">
 						<Controls.SearchBox
 							fullWidth={true}
 							value={searchText}
 							handleChange={handleSearchTextChange}
-							placeholder="Search for a word. use lower case"
+							placeholder="Search for a word"
 						/>
 					</div>
 				</IF>
 
+				{/* a switch to move between tabs */}
 				<Switch>
 					<Route path="/" exact>
 						{wordListComponent}
@@ -233,19 +200,15 @@ export default function EngKeep({ items }) {
 						{wordListComponent}
 					</Route>
 
-					<Route path="/words/:wordName">
+					<Route path="/words/:word">
 						<SingleWord />
 					</Route>
 				</Switch>
 
-				{/* Loading indicator */}
-				<IF condition={loading}>
-					<h2 className="mt-3 text-center">
-						<CircularProgress size={30} color="primary" />
-					</h2>
-				</IF>
+				{/* Loading indicator - disabled for now */}
 			</section>
 
+			{/* Add word form's toggler */}
 			<Fab onClick={handleTogglePopup} color="secondary" className={classes.addNewWordBtn}>
 				<PlusIcon className="h-8" />
 			</Fab>

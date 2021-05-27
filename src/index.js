@@ -1,16 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
+
+// Components
 import App from "./App";
-import SingleWord from "./components/single-word/SingleWord";
 
 // Router
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 
-// style
-import { ThemeProvider } from "@material-ui/styles";
-import { CssBaseline } from "@material-ui/core";
-import "./styles/style.css";
+// styles
+import { CssBaseline, ThemeProvider } from "@material-ui/core";
 import theme from "./styles/theme";
+import "./styles/style.css";
 
 ReactDOM.render(
 	<React.StrictMode>
