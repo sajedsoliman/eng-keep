@@ -30,7 +30,7 @@ function ItemForm({ handleUpdate, handleDelete, label, value, lastNewAddedFormId
 	useEffect(() => {
 		// handle focus the last added new form's input
 		if (lastNewAddedFormId === value.id) {
-			formInputRef.current.querySelector("input").focus();
+			formInputRef.e.target.querySelector("input").focus();
 		}
 	}, [lastNewAddedFormId]);
 

@@ -26,13 +26,13 @@ function FormList({ list, setList, inputLabel, listLabel, wrapperClassName }) {
 
 	// Handle update a certain sentence
 	const handleUpdateItem = (id, newValue) => {
-		setList(list.map((item) => (item.id === id ? { body: newValue, id: id } : item)));
+		setList(list.map((item) => (item.id === id ? { ...item, body: newValue } : item)));
 	};
 
 	// Handle add a new sentence form
 	const handleAddItemForm = () => {
 		const id = new Date().getTime();
-		setList((prevList) => [...prevList, { body: "", id }]);
+		setList((prevList) => [...prevList, { body: "", id, userProvided: true }]);
 
 		// Handle focus the list item form when add
 		setNewFormId(id);

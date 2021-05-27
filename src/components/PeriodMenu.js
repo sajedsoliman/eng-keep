@@ -1,11 +1,20 @@
 // UI
-import { ClickAwayListener, MenuItem, MenuList } from "@material-ui/core";
+import { ClickAwayListener, makeStyles, MenuItem, MenuList } from "@material-ui/core";
 import CustomMenuList from "../common-components/ui/CustomMenuList";
 
 // Info
 import { DATE_SORTING_PERIODS } from "../helpers/info";
 
-function PeriodMenu({ open, anchorEl, handleChangePeriod, handleTogglePeriodMenu }) {
+// Styles
+const useStyles = makeStyles((theme) => ({
+	activeItem: {
+		borderLeft: "2px solid black",
+	},
+}));
+
+function PeriodMenu({ open, anchorEl, handleChangePeriod, handleTogglePeriodMenu, currentPeriod }) {
+	const classes = useStyles();
+
 	const mappedPeriods = DATE_SORTING_PERIODS.map(({ label, period }) => (
 		<MenuItem
 			key={label}
@@ -13,6 +22,7 @@ function PeriodMenu({ open, anchorEl, handleChangePeriod, handleTogglePeriodMenu
 				handleChangePeriod(period);
 				handleTogglePeriodMenu();
 			}}
+			className={currentPeriod === period && classes.activeItem}
 		>
 			{label}
 		</MenuItem>

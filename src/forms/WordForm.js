@@ -26,6 +26,8 @@ function WordForm({ wordData, handleClosePopup, action, wordDocId }) {
 	const [syns, setSyns] = useState(synonyms);
 	const [wordAvailability, setWordAvailability] = useState("");
 
+	console.log(sens);
+
 	// Import useForm
 	const formInitialValues = { word, category };
 	const { values: wordInfo, inputCommonProps } = useForm(formInitialValues, false);

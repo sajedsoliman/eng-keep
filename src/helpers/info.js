@@ -63,6 +63,8 @@ const DATE_SORTING_PERIODS = [
 	},
 ];
 
+const DEFAULT_WORD_LIST_LIMIT = window.innerWidth < 700 ? 3 : 12;
+
 export {
 	homepageTabs,
 	PATHS,
@@ -72,4 +74,5 @@ export {
 	unsplashApiReq,
 	dicApiReq,
 	DATE_SORTING_PERIODS,
+	DEFAULT_WORD_LIST_LIMIT,
 };
