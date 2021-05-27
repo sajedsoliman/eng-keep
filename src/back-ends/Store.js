@@ -17,32 +17,26 @@ function Store() {
 
 	// Get the word list depending on the param (category) for now
 	const handleGetWordListOnCategory = (limit, category, setList) => {
-		setLoading(true);
+		// setLoading(true);
+
+		const categoryQueryRef = db.collection("words").where("category", "==", category);
 
 		// Get words available count
-		db.collection("words")
-			.where("category", "==", category)
-			.get()
-			.then((snapshot) => {
-				setItemsCount(snapshot.docs.length);
-			});
+		categoryQueryRef.get().then((snapshot) => {
+			setItemsCount(snapshot.docs.length);
+		});
 
-		return db
-			.collection("words")
-			.where("category", "==", category)
-			.orderBy("timestamp", "desc")
-			.limit(limit)
-			.onSnapshot((snapshot) => {
-				const words = snapshot.docs.map((doc) => ({ id: doc.id, word: doc.data() }));
+		return categoryQueryRef.orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+			const words = snapshot.docs.map((doc) => ({ id: doc.id, word: doc.data() }));
 
-				setList(words);
-				setLoading(false);
-			});
+			setList(words);
+			// setLoading(false);
+		});
 	};
 
 	// Get the whole word list
 	const handleGetWholeWordList = (limit, setList) => {
-		setLoading(true);
+		// setLoading(true);
 
 		// Get words available count
 		db.collection("words")
@@ -51,63 +45,42 @@ function Store() {
 				setItemsCount(snapshot.docs.length);
 			});
 
-		/* db.collection("words")
-			.orderBy("timestamp", "desc")
-			.limit(limit)
-			.get()
-			.then((snapshot) => {
-				const first = snapshot.docs[limit - 3 + 1];
-
-				db.collection("words")
-					.orderBy("timestamp", "desc")
-					.startAt(first)
-					.limit(limit)
-					.get()
-					.then((snap) => {
-						console.log(snap.docs.map((doc) => ({ id: doc.id, word: doc.data() })));
-					});
-			}); */
-
 		return db
 			.collection("words")
 			.orderBy("timestamp", "desc")
-			.limit(limit)
 			.onSnapshot((snapshot) => {
 				const words = snapshot.docs.map((doc) => ({ id: doc.id, word: doc.data() }));
 
 				setList(words);
-				setLoading(false);
+				// setLoading(false);
 			});
 	};
 
 	// get word list depends on the given period
 	const handleGetWordListByDate = (limit, period, setList) => {
+		// setLoading(true);
+
 		const startDate = getDateOnPeriod(period).startDate;
 		// Which is today - endDate
 		const endDate = getDateOnPeriod(period).endDate;
 
-		// Get words available count
-		db.collection("words")
+		const dateQueryRef = db
+			.collection("words")
 			.where("timestamp", ">=", startDate)
 			.where("timestamp", "<=", endDate)
-			.get()
-			.then((snapshot) => {
-				setItemsCount(snapshot.docs.length);
-			});
+			.orderBy("timestamp", "desc");
 
-		return (
-			db
-				.collection("words")
-				.orderBy("timestamp", "desc")
-				.where("timestamp", ">=", startDate)
-				.where("timestamp", "<=", endDate)
-				// .limit(limit)
-				.onSnapshot((snapshot) => {
-					const words = snapshot.docs.map((doc) => ({ id: doc.id, word: doc.data() }));
+		// Get words available count
+		dateQueryRef.get().then((snapshot) => {
+			setItemsCount(snapshot.docs.length);
+		});
 
-					setList(words);
-				})
-		);
+		return dateQueryRef.onSnapshot((snapshot) => {
+			const words = snapshot.docs.map((doc) => ({ id: doc.id, word: doc.data() }));
+
+			setList(words);
+			// setLoading(false);
+		});
 	};
 
 	// Get audio src for a given word

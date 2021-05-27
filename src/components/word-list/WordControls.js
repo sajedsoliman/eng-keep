@@ -11,7 +11,7 @@ import { PencilIcon, PhotographIcon, TrashIcon } from "@heroicons/react/outline"
 import WordForm from "../../forms/WordForm";
 import ConfirmPopUp from "../../common-components/ui/ConfirmPopUp";
 
-function WordControls({ handleRemoveWord, handleShowImage, wordData, id }) {
+function WordControls({ handleRemoveWord, handleShowImage, wordData, id, wordImage }) {
 	// State vars
 	const [updateModalOpen, setUpdateModalOpen] = useState(false);
 	const [confirmDeletePopupOpen, setConfirmDeletePopupOpen] = useState(false);
@@ -64,7 +64,7 @@ function WordControls({ handleRemoveWord, handleShowImage, wordData, id }) {
 				size="small"
 				startIcon={<PhotographIcon className="h-5 text-green-600" />}
 			>
-				Show Image
+				Show {wordImage !== "" ? "Def" : "Image"}
 			</Button>
 
 			{/* update Word */}

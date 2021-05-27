@@ -100,7 +100,7 @@ export default function EngKeep({ items }) {
 		itemsCount,
 	} = Store();
 
-	const observer = useRef();
+	/* const observer = useRef();
 	const lastWordElementRef = useCallback(
 		(node) => {
 			if (loading) return;
@@ -114,7 +114,12 @@ export default function EngKeep({ items }) {
 			if (node) observer.current.observe(node);
 		},
 		[loading, itemsCount]
-	);
+	); */
+
+	// console.log(itemsCount);
+	// console.log(limit);
+
+	console.log(loading);
 
 	// Set a listener to track the current tab and fetch the apt data
 	useEffect(() => {
@@ -144,6 +149,7 @@ export default function EngKeep({ items }) {
 	// Set a listener to reset the limit when the currTab or period gets changed
 	useEffect(() => {
 		setLimit(DEFAULT_WORD_LIST_LIMIT);
+		setWordList([]);
 	}, [currentTab, period]);
 
 	useEffect(() => {
@@ -195,7 +201,9 @@ export default function EngKeep({ items }) {
 		setPeriod(newPeriod);
 	};
 
-	const wordListComponent = <WordList lastWordRef={lastWordElementRef} list={filteredWordList} />;
+	const wordListComponent = (
+		<WordList /* lastWordRef={lastWordElementRef} */ list={filteredWordList} />
+	);
 
 	return (
 		<main className="bg-gray-100 min-h-screen">

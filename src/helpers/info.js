@@ -63,7 +63,7 @@ const DATE_SORTING_PERIODS = [
 	},
 ];
 
-const DEFAULT_WORD_LIST_LIMIT = window.innerWidth < 700 ? 3 : 12;
+const DEFAULT_WORD_LIST_LIMIT = window.innerWidth < 700 ? 5 : 12;
 
 export {
 	homepageTabs,

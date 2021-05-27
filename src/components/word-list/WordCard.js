@@ -35,8 +35,8 @@ function WordCard({ wordData, id }) {
 
 	// handle show a random image
 	const handleShowImage = () => {
-		const randImage = images.sort(() => Math.random() - 0.5)[0];
-		setWordImage(randImage);
+		const rendImage = images.sort(() => Math.random() - 0.5)[0];
+		setWordImage((prevState) => (prevState == "" ? rendImage : ""));
 	};
 
 	return (
@@ -65,6 +65,7 @@ function WordCard({ wordData, id }) {
 					wordData={wordData}
 					handleRemoveWord={handleRemoveWord}
 					handleShowImage={handleShowImage}
+					wordImage={wordImage}
 				/>
 
 				<div>

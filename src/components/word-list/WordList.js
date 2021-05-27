@@ -13,18 +13,20 @@ export const WordList = React.memo(
 			const { id, word } = wordDoc;
 			const gridProps = {
 				item: true,
+				xs: 12,
 				md: 6,
 				lg: 4,
 				key: id,
 			};
 
-			if (list.length - 1 === index) {
+			/* 			if (list.length - 1 === index) {
 				return (
 					<Grid ref={lastWordRef} {...gridProps}>
 						<WordCard wordData={word} id={id} />
 					</Grid>
 				);
 			}
+ */
 			return (
 				<Grid {...gridProps}>
 					<WordCard wordData={word} id={id} />
