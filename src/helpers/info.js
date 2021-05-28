@@ -3,6 +3,13 @@ const PATHS = {
 	PRONUNCIATION: "/properly-pronunciation-words",
 	ALL_WORDS: "/",
 	BY_DATE: "/sort-by-date",
+	REGISTER: "/register",
+	SIGN_IN: "/signin",
+};
+
+const NON_SEARCHABLE_PATHS = {
+	REGISTER: "",
+	SIGN_IN: "",
 };
 
 const homepageTabs = [
@@ -65,6 +72,16 @@ const DATE_SORTING_PERIODS = [
 
 const DEFAULT_WORD_LIST_LIMIT = window.innerWidth < 700 ? 5 : 12;
 
+const USER_SIGNIN_INITIAL_VALUES = {
+	email: "",
+	password: "",
+};
+
+const USER_REGISTER_INITIAL_VALUES = {
+	...USER_SIGNIN_INITIAL_VALUES,
+	fullName: "",
+};
+
 export {
 	homepageTabs,
 	PATHS,
@@ -75,4 +92,7 @@ export {
 	dicApiReq,
 	DATE_SORTING_PERIODS,
 	DEFAULT_WORD_LIST_LIMIT,
+	NON_SEARCHABLE_PATHS,
+	USER_REGISTER_INITIAL_VALUES,
+	USER_SIGNIN_INITIAL_VALUES,
 };

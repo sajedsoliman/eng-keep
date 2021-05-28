@@ -5,6 +5,7 @@ import PasswordInput from "./PasswordInput";
 import RadioGroup from "./RadioGroup";
 import SelectBoxInput from "./SelectBoxInput";
 import ReusableCheckBox from "./ReusableCheckBox";
+import FilePondCircular from "./FilePondCircular";
 
 export default {
 	SearchBox,
@@ -14,4 +15,5 @@ export default {
 	RadioGroup,
 	ReusableCheckBox,
 	SelectBoxInput,
+	FilePondCircular,
 };

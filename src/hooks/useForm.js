@@ -29,7 +29,7 @@ export function useForm(initialValues, validationOnInput = true, validation) {
 	// input common props
 	const inputCommonProps = (label, name, value, error) => ({
 		label,
-		onChange: handleInputsChange,
+		inputChange: handleInputsChange,
 		value: value,
 		name,
 		...(error != undefined && error != "" ? { helperText: error, error: true } : {}),

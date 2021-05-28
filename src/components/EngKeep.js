@@ -16,16 +16,20 @@ import {
 	PATHS,
 	wordDataInitialValues,
 	homepageTabs,
+	NON_SEARCHABLE_PATHS,
 } from "../helpers/info";
 
 // Util
 import IF from "../common-components/util/IF";
 
 // Components
+import Header from "./header/Header";
 import Store from "../back-ends/Store";
 import { WordList } from "./word-list/WordList";
 import SingleWord from "./single-word/SingleWord";
 import WordForm from "../forms/WordForm";
+import Register from "../pages/Register";
+import Login from "../pages/Login";
 
 // Style
 const useStyles = makeStyles((theme) => ({
@@ -172,6 +176,9 @@ export default function EngKeep() {
 
 	return (
 		<main className="bg-gray-100 min-h-screen">
+			{/* App header for signin and register */}
+			<Header />
+
 			{/* App Tabs => done */}
 			<HomepageTabs handleChangePeriod={handleChangePeriod} period={period} {...tabsProps} />
 
@@ -179,7 +186,7 @@ export default function EngKeep() {
 			<section className={`${classes.wordListWrapper} p-4`}>
 				{/* Search Box - if the path is anything but word-listed tabs (all, new, pronunciation) */}
 				{/* Anything but a single word page */}
-				<IF condition={Object.values(PATHS).includes(location.pathname)}>
+				<IF condition={Object.values(NON_SEARCHABLE_PATHS).includes(location.pathname)}>
 					<div className="m-auto w-full md:w-6/12 mb-4">
 						<Controls.SearchBox
 							fullWidth={true}
@@ -194,6 +201,14 @@ export default function EngKeep() {
 				<Switch>
 					<Route path="/" exact>
 						{wordListComponent}
+					</Route>
+
+					<Route path="/register">
+						<Register />
+					</Route>
+
+					<Route path="/signin">
+						<Login />
 					</Route>
 
 					<Route path="/:id" exact>
