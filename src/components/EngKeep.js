@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Route, Switch, useLocation } from "react-router";
 
 // UI
-import { CircularProgress, Fab, makeStyles, Slide } from "@material-ui/core";
+import { Fab, makeStyles } from "@material-ui/core";
 import PopUp from "../common-components/ui/PopUp";
 import HomepageTabs from "./HomepageTabs";
 import Controls from "../common-components/controls/Controls";
@@ -22,14 +22,19 @@ import {
 // Util
 import IF from "../common-components/util/IF";
 
+// Contexts
+import { AuthedUser } from "../contexts/UserContext";
+
 // Components
 import Header from "./header/Header";
 import Store from "../back-ends/Store";
 import { WordList } from "./word-list/WordList";
-import SingleWord from "./single-word/SingleWord";
 import WordForm from "../forms/WordForm";
-import Register from "../pages/Register";
-import Login from "../pages/Login";
+
+// Pages
+import Register from "../pages/auth/Register";
+import Login from "../pages/auth/Login";
+import SingleWord from "./single-word/SingleWord";
 
 // Style
 const useStyles = makeStyles((theme) => ({
@@ -74,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EngKeep() {
 	const classes = useStyles();
+	const loggedUser = AuthedUser();
 
 	// Router
 	const location = useLocation();
@@ -117,7 +123,7 @@ export default function EngKeep() {
 			// Stop the onSnapshot listener as the current tab changes
 			unsubscribe();
 		};
-	}, [currentTab, period, limit]);
+	}, [currentTab, period, limit, loggedUser]);
 
 	// Set a listener to reset the limit when the currTab or period gets changed
 	useEffect(() => {
@@ -174,6 +180,8 @@ export default function EngKeep() {
 
 	const wordListComponent = <WordList list={filteredWordList} />;
 
+	console.log(loggedUser);
+
 	return (
 		<main className="bg-gray-100 min-h-screen">
 			{/* App header for signin and register */}
@@ -184,9 +192,24 @@ export default function EngKeep() {
 
 			{/* Each tab content depending on the current tab */}
 			<section className={`${classes.wordListWrapper} p-4`}>
+				{/* A message to display if the user is not logged in */}
+				<IF
+					condition={
+						loggedUser === "no user" &&
+						!Object.values(NON_SEARCHABLE_PATHS).includes(location.pathname)
+					}
+				>
+					<h2 className="font-medium text-lg text-center">Log in to add &amp; see words</h2>
+				</IF>
+
 				{/* Search Box - if the path is anything but word-listed tabs (all, new, pronunciation) */}
 				{/* Anything but a single word page */}
-				<IF condition={Object.values(NON_SEARCHABLE_PATHS).includes(location.pathname)}>
+				<IF
+					condition={
+						!Object.values(NON_SEARCHABLE_PATHS).includes(location.pathname) &&
+						loggedUser !== "no user"
+					}
+				>
 					<div className="m-auto w-full md:w-6/12 mb-4">
 						<Controls.SearchBox
 							fullWidth={true}
@@ -223,10 +246,12 @@ export default function EngKeep() {
 				{/* Loading indicator - disabled for now */}
 			</section>
 
-			{/* Add word form's toggler */}
-			<Fab onClick={handleTogglePopup} color="secondary" className={classes.addNewWordBtn}>
-				<PlusIcon className="h-8" />
-			</Fab>
+			{/* Add word form's toggler - if there is a logged user */}
+			<IF condition={loggedUser !== "no user"}>
+				<Fab onClick={handleTogglePopup} color="secondary" className={classes.addNewWordBtn}>
+					<PlusIcon className="h-8" />
+				</Fab>
+			</IF>
 
 			{/* Add word popup */}
 			<PopUp {...PopUpProps}>

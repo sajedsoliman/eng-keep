@@ -1,25 +1,46 @@
 import { useState } from "react";
+
+// Router
+import { useHistory } from "react-router-dom";
+
 // Firebase
-import { db, firebase } from "./database";
+import { db, auth, firebase, storage } from "./database";
 
 // Helpers - info
 import { dicApiReq } from "../helpers/info";
 import Helpers from "./HelperFunctions";
 import { getDateOnPeriod } from "../helpers/functions";
 
+// Contexts
+import { AuthedUser } from "../contexts/UserContext";
+
 function Store() {
+	const loggedUser = AuthedUser();
+
 	// Get the needed helpers function
-	const { handleGetImages, handleGetMoreWordInfo, wordDicAbility } = Helpers();
+	const {
+		handleGetImages,
+		handleGetMoreWordInfo,
+		wordDicAbility,
+		addUserToDb,
+		handleUploadUserAvatar,
+	} = Helpers();
+
+	// Router
+	const history = useHistory();
 
 	// State vars
 	const [loading, setLoading] = useState(false);
 	const [itemsCount, setItemsCount] = useState(null);
 
+	// For logged user - start
 	// Get the word list depending on the param (category) for now
 	const handleGetWordListOnCategory = (limit, category, setList) => {
-		// setLoading(true);
-
-		const categoryQueryRef = db.collection("words").where("category", "==", category);
+		const categoryQueryRef = db
+			.collection("users")
+			.doc(loggedUser.id)
+			.collection("user-words")
+			.where("category", "==", category);
 
 		// Get words available count
 		categoryQueryRef.get().then((snapshot) => {
@@ -28,7 +49,7 @@ function Store() {
 
 		return categoryQueryRef.orderBy("timestamp", "desc").onSnapshot((snapshot) => {
 			const words = snapshot.docs.map((doc) => ({ id: doc.id, word: doc.data() }));
-
+			console.log(words);
 			setList(words);
 			// setLoading(false);
 		});
@@ -39,14 +60,18 @@ function Store() {
 		// setLoading(true);
 
 		// Get words available count
-		db.collection("words")
+		db.collection("users")
+			.doc(loggedUser.id)
+			.collection("user-words")
 			.get()
 			.then((snapshot) => {
 				setItemsCount(snapshot.docs.length);
 			});
 
 		return db
-			.collection("words")
+			.collection("users")
+			.doc(loggedUser.id)
+			.collection("user-words")
 			.orderBy("timestamp", "desc")
 			.onSnapshot((snapshot) => {
 				const words = snapshot.docs.map((doc) => ({ id: doc.id, word: doc.data() }));
@@ -65,7 +90,9 @@ function Store() {
 		const endDate = getDateOnPeriod(period).endDate;
 
 		const dateQueryRef = db
-			.collection("words")
+			.collection("users")
+			.doc(loggedUser.id)
+			.collection("user-words")
 			.where("timestamp", ">=", startDate)
 			.where("timestamp", "<=", endDate)
 			.orderBy("timestamp", "desc");
@@ -82,6 +109,7 @@ function Store() {
 			// setLoading(false);
 		});
 	};
+	// For logged user - end
 
 	// Get audio src for a given word
 	const handleGetAudioSrc = async (word) => {
@@ -128,17 +156,75 @@ function Store() {
 				  }),
 		};
 
-		db.collection("words").add(dbWord);
+		db.collection("users").doc(loggedUser.id).collection("user-words").add(dbWord);
 	};
 
 	// Handle delete word by id
 	const handleDeleteWord = (id) => {
-		db.collection("words").doc(id).delete();
+		db.collection("users").doc(loggedUser.id).collection("user-words").doc(id).delete();
 	};
 
 	// Handle update a certain word by id
 	const handleUpdateWord = (id, newWordData) => {
-		db.collection("words").doc(id).update(newWordData);
+		db.collection("users").doc(loggedUser.id).collection("user-words").doc(id).update(newWordData);
+	};
+
+	// Handle register a user
+	const handleRegisterUser = async (userInfo) => {
+		// destructuring the user
+		let { avatar, fullName, email, password } = userInfo;
+
+		// set loading
+		setLoading(true);
+
+		// Auth the user
+		const newUser = auth.createUserWithEmailAndPassword(email, password);
+
+		// Check for the avatar
+		if (avatar != null || avatar != undefined) {
+			// handle upload the avatar
+			avatar = await handleUploadUserAvatar(avatar);
+		}
+
+		// Update the user's fullName and avatar
+		newUser.then((authUser) => {
+			const dbUser = {
+				fullName,
+				email,
+				avatar: avatar,
+				id: authUser.user.uid,
+			};
+			addUserToDb(dbUser);
+
+			// Stop the loading progress
+			setLoading(false);
+
+			authUser.user.updateProfile({
+				displayName: fullName,
+				photoURL: avatar,
+			});
+		});
+	};
+
+	// Handle signin a user
+	const handleSignin = (email, password) => {
+		// set loading
+
+		auth
+			.signInWithEmailAndPassword(email, password)
+			.then((loggedUser) => {
+				// Go to home - if there is from page => go to it
+				history.replace("/");
+			})
+			.catch((error) => alert(error.message));
+	};
+
+	// handle sign out
+	const handleSignOut = () => {
+		auth.signOut().then(() => {
+			// Go to login page
+			history.replace("/signin");
+		});
 	};
 
 	return {
@@ -152,6 +238,9 @@ function Store() {
 		handleGetWordListByDate,
 		loading,
 		itemsCount,
+		handleRegisterUser,
+		handleSignin,
+		handleSignOut,
 	};
 }
 

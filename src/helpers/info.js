@@ -8,8 +8,8 @@ const PATHS = {
 };
 
 const NON_SEARCHABLE_PATHS = {
-	REGISTER: "",
-	SIGN_IN: "",
+	REGISTER: "/register",
+	SIGN_IN: "/signin",
 };
 
 const homepageTabs = [

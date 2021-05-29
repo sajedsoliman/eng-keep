@@ -1,5 +1,5 @@
 // Firebase
-import { db } from "./database";
+import { db, storage } from "./database";
 
 // info
 import { dicApiReq, unsplashApiReq } from "../helpers/info";
@@ -67,7 +67,31 @@ function Helpers() {
 		return true;
 	};
 
-	return { handleGetImages, handleGetMoreWordInfo, wordDicAbility };
+	// handle add the user to db
+	const addUserToDb = (userInfo) => {
+		db.collection("users").doc(userInfo.id).set(userInfo);
+	};
+
+	// handle upload a user avatar
+	const handleUploadUserAvatar = async (avatar) => {
+		// 1. upload the avatar
+		await storage.ref(`users-avatar/${avatar.name}`).put(avatar);
+
+		// return the download url
+		return storage
+			.ref("users-avatar")
+			.child(avatar.name)
+			.getDownloadURL()
+			.then((url) => url);
+	};
+
+	return {
+		handleGetImages,
+		handleGetMoreWordInfo,
+		wordDicAbility,
+		addUserToDb,
+		handleUploadUserAvatar,
+	};
 }
 
 export default Helpers;

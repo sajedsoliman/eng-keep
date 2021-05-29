@@ -7,6 +7,9 @@ import App from "./App";
 // Router
 import { BrowserRouter as Router } from "react-router-dom";
 
+// Contexts
+import { AuthedUserProvider } from "./contexts/UserContext";
+
 // styles
 import { CssBaseline, ThemeProvider } from "@material-ui/core";
 import theme from "./styles/theme";
@@ -16,8 +19,10 @@ ReactDOM.render(
 	<React.StrictMode>
 		<ThemeProvider theme={theme}>
 			<Router>
-				<CssBaseline />
-				<App />
+				<AuthedUserProvider>
+					<CssBaseline />
+					<App />
+				</AuthedUserProvider>
 			</Router>
 		</ThemeProvider>
 	</React.StrictMode>,

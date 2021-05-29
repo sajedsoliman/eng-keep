@@ -7,11 +7,17 @@ import PopUp from "../../common-components/ui/PopUp";
 // Icons
 import { PencilIcon, PhotographIcon, TrashIcon } from "@heroicons/react/outline";
 
+// Contexts
+import { AuthedUser } from "../../contexts/UserContext";
+
 // Components
 import WordForm from "../../forms/WordForm";
 import ConfirmPopUp from "../../common-components/ui/ConfirmPopUp";
+import IF from "../../common-components/util/IF";
 
 function WordControls({ handleRemoveWord, handleShowImage, wordData, id, wordImage }) {
+	const loggedUser = AuthedUser();
+
 	// State vars
 	const [updateModalOpen, setUpdateModalOpen] = useState(false);
 	const [confirmDeletePopupOpen, setConfirmDeletePopupOpen] = useState(false);
@@ -55,21 +61,30 @@ function WordControls({ handleRemoveWord, handleShowImage, wordData, id, wordIma
 
 	return (
 		<div className="mt-2 space-x-3 flex justify-center">
-			{/* Delete Word */}
-			<Button
-				{...btnProps(<TrashIcon className="h-5 text-red-500" />, handleConfirmDeleteWordOpen)}
-			>
-				Delete
-			</Button>
+			<IF condition={loggedUser !== "no user"}>
+				{/* Delete Word */}
+				<Button
+					className="order-1"
+					{...btnProps(<TrashIcon className="h-5 text-red-500" />, handleConfirmDeleteWordOpen)}
+				>
+					Delete
+				</Button>
+
+				{/* update Word */}
+				<Button
+					className="order-3"
+					{...btnProps(<TrashIcon className="h-5 text-blue-700" />, handleTogglePopup)}
+				>
+					Edit
+				</Button>
+			</IF>
 
 			{/* Show Word's image */}
-			<Button {...btnProps(<PhotographIcon className="h-5 text-green-600" />, handleShowImage)}>
+			<Button
+				className="order-2"
+				{...btnProps(<PhotographIcon className="h-5 text-green-600" />, handleShowImage)}
+			>
 				Show {wordImage !== "" ? "Def" : "Image"}
-			</Button>
-
-			{/* update Word */}
-			<Button {...btnProps(<TrashIcon className="h-5 text-blue-700" />, handleTogglePopup)}>
-				Edit
 			</Button>
 
 			{/* Update word popup */}

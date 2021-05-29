@@ -1,6 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
 import alanBtn from "@alan-ai/alan-sdk-web";
 
+// Contexts
+import { AuthedUser } from "../contexts/UserContext";
+
 // Components
 import Store from "../back-ends/Store";
 
@@ -9,6 +12,8 @@ const COMMANDS = {
 };
 
 export default function useAlan() {
+	const loggedUser = AuthedUser();
+
 	const [alanInstance, setAlanInstance] = useState();
 
 	// Import store component to handle adding new words
@@ -36,7 +41,8 @@ export default function useAlan() {
 	}, [addWord]);
 
 	useEffect(() => {
-		if (alanInstance != null) return;
+		// Problem: when logged out it doesn't disappear
+		if (alanInstance != null || loggedUser === "no user") return;
 
 		setAlanInstance(
 			alanBtn({
@@ -48,7 +54,7 @@ export default function useAlan() {
 				},
 			})
 		);
-	}, []);
+	}, [loggedUser]);
 
 	return null;
 }
