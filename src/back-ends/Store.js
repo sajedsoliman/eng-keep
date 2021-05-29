@@ -49,7 +49,7 @@ function Store() {
 
 		return categoryQueryRef.orderBy("timestamp", "desc").onSnapshot((snapshot) => {
 			const words = snapshot.docs.map((doc) => ({ id: doc.id, word: doc.data() }));
-			console.log(words);
+
 			setList(words);
 			// setLoading(false);
 		});

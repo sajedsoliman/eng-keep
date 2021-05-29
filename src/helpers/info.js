@@ -3,8 +3,6 @@ const PATHS = {
 	PRONUNCIATION: "/properly-pronunciation-words",
 	ALL_WORDS: "/",
 	BY_DATE: "/sort-by-date",
-	REGISTER: "/register",
-	SIGN_IN: "/signin",
 };
 
 const NON_SEARCHABLE_PATHS = {

@@ -5,7 +5,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { LoginIcon, LogoutIcon, UserAddIcon } from "@heroicons/react/outline";
 
 // Icon
-import { AppBar, Button, IconButton, Toolbar } from "@material-ui/core";
+import { AppBar, Avatar, Button, IconButton, makeStyles, Toolbar } from "@material-ui/core";
 
 // Util
 import IF from "../../common-components/util/IF";
@@ -16,7 +16,16 @@ import { AuthedUser } from "../../contexts/UserContext";
 // Components
 import Store from "../../back-ends/Store";
 
+// Styles
+const useStyles = makeStyles((theme) => ({
+	userAvatar: {
+		width: 32,
+		height: 32,
+	},
+}));
+
 function Header() {
+	const classes = useStyles();
 	const loggedUser = AuthedUser();
 
 	// Import Store component to handle Logout
@@ -46,14 +55,20 @@ function Header() {
 				</IF>
 
 				{/* logout state (If there is a user) */}
-				<IF condition={loggedUser !== "no user"}>
+				{loggedUser != "no user" && (
 					<div className="flex flex-1 items-center justify-between">
-						<h3 className="font-semibold">{loggedUser.fullName}</h3>
+						{/* User name and avatar */}
+						<div className="flex items-center">
+							<Avatar className={classes.userAvatar} src={loggedUser.avatar}>
+								{loggedUser.fullName[0]}
+							</Avatar>
+							<h3 className="font-semibold ml-2">{loggedUser.fullName}</h3>
+						</div>
 						<IconButton color="secondary" onClick={handleSignOut}>
 							<LogoutIcon className="h-6" />
 						</IconButton>
 					</div>
-				</IF>
+				)}
 			</Toolbar>
 		</AppBar>
 	);

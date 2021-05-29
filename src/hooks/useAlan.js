@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import alanBtn from "@alan-ai/alan-sdk-web";
 
 // Contexts
@@ -13,6 +13,9 @@ const COMMANDS = {
 
 export default function useAlan() {
 	const loggedUser = AuthedUser();
+
+	// Refs
+	const alanBtnContainer = useRef();
 
 	const [alanInstance, setAlanInstance] = useState();
 
@@ -42,6 +45,10 @@ export default function useAlan() {
 
 	useEffect(() => {
 		// Problem: when logged out it doesn't disappear
+		if (loggedUser === "no user") {
+			document.querySelector(".alanBtn-root")?.remove();
+			setAlanInstance(null);
+		}
 		if (alanInstance != null || loggedUser === "no user") return;
 
 		setAlanInstance(

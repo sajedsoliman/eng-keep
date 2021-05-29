@@ -35,6 +35,7 @@ import WordForm from "../forms/WordForm";
 import Register from "../pages/auth/Register";
 import Login from "../pages/auth/Login";
 import SingleWord from "./single-word/SingleWord";
+import { db } from "../back-ends/database";
 
 // Style
 const useStyles = makeStyles((theme) => ({
@@ -102,6 +103,8 @@ export default function EngKeep() {
 
 	// Set a listener to track the current tab and fetch the apt data
 	useEffect(() => {
+		if (loggedUser === "no user") return setWordList([]);
+
 		const currPath = location.pathname;
 
 		// get tab's content depending on the current tab
@@ -132,9 +135,8 @@ export default function EngKeep() {
 
 	useEffect(() => {
 		if (wordList !== null) {
-			const filteredList = wordList.filter(
-				(wordDoc) => wordDoc.word.word.search(searchText) !== -1
-			);
+			const wordRegex = new RegExp(searchText, "i");
+			const filteredList = wordList.filter((wordDoc) => wordDoc.word.word.search(wordRegex) !== -1);
 			setFilteredWordList(filteredList);
 		}
 	}, [searchText, wordList]);
@@ -180,7 +182,11 @@ export default function EngKeep() {
 
 	const wordListComponent = <WordList list={filteredWordList} />;
 
-	console.log(loggedUser);
+	// search box display conditions
+	const isSearchDisplay =
+		Object.values(PATHS).includes(location.pathname) &&
+		loggedUser !== "no user" &&
+		wordList?.length !== 0;
 
 	return (
 		<main className="bg-gray-100 min-h-screen">
@@ -204,12 +210,7 @@ export default function EngKeep() {
 
 				{/* Search Box - if the path is anything but word-listed tabs (all, new, pronunciation) */}
 				{/* Anything but a single word page */}
-				<IF
-					condition={
-						!Object.values(NON_SEARCHABLE_PATHS).includes(location.pathname) &&
-						loggedUser !== "no user"
-					}
-				>
+				<IF condition={isSearchDisplay}>
 					<div className="m-auto w-full md:w-6/12 mb-4">
 						<Controls.SearchBox
 							fullWidth={true}
