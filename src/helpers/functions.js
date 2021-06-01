@@ -69,4 +69,13 @@ const valCond = (condition, errMsg) => {
 	return condition ? "" : `${errMsg}.`;
 };
 
-export { getDateOnPeriod, userValidation };
+// DuplicatableKey => the key that may duplicate in the objects and causes them to duplicate
+const removeDuplicatedObjsInArr = (array, duplicatableKey) => {
+	const keys = array.map((key) => key[duplicatableKey]);
+	const refinedKeys = [...new Set(keys)];
+	const finalArray = refinedKeys.map((key) => array.find((item) => item[duplicatableKey] === key));
+
+	return finalArray;
+};
+
+export { getDateOnPeriod, userValidation, removeDuplicatedObjsInArr };

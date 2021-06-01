@@ -42,7 +42,7 @@ const wordDataInitialValues = {
 
 const FORM_LIST_INITIAL_VALUE = { body: "", id: new Date().getTime() };
 
-const WORD_CATEGORIES = ["new", "pronunciation"];
+const WORD_CATEGORIES = ["new", "pronunciation", "phrase"];
 
 const unsplashApiReq = (query) =>
 	`https://api.unsplash.com/search/photos?page=1&per_page=4&query=${query}&client_id=${process.env.REACT_APP_UNSPLASH_CLIENT_ID}`;

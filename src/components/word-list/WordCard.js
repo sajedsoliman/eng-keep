@@ -35,8 +35,11 @@ function WordCard({ wordData, id }) {
 
 	// handle show a random image
 	const handleShowImage = () => {
-		const rendImage = images.sort(() => Math.random() - 0.5)[0];
-		setWordImage((prevState) => (prevState == "" ? rendImage : ""));
+		const randImage =
+			images.sort(() => Math.random() - 0.5).length === 0
+				? ""
+				: images.sort(() => Math.random() - 0.5)[0];
+		setWordImage((prevState) => (prevState === "" ? randImage : ""));
 	};
 
 	// Card styles - classNames
@@ -44,7 +47,7 @@ function WordCard({ wordData, id }) {
 		backgroundImage: `url('${wordImage}')`,
 	};
 	const cardClassnames = `${
-		wordImage != "" && "text-white"
+		wordImage !== "" && "text-white"
 	} border p-4 bg-white bg-cover rounded-md overflow-hidden relative shadow-inner bg-center bg-no-repeat`;
 
 	return (

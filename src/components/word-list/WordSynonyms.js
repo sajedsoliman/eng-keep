@@ -4,6 +4,9 @@
 import { VolumeUpIcon } from "@heroicons/react/outline";
 import { Grid } from "@material-ui/core";
 
+// Info & functions
+import { removeDuplicatedObjsInArr } from "../../helpers/functions";
+
 // Components
 import Store from "../../back-ends/Store";
 
@@ -19,15 +22,8 @@ function WordSynonyms({ synonyms }) {
 		audioEl.play();
 	};
 
-	// new Set to remove the duplicated synonyms
-	const bodies = synonyms.map((synonym) => synonym.body);
-	const refinedBodies = [...new Set(bodies)];
-	const finalSynonyms = refinedBodies.map((body) =>
-		synonyms.find((synonym) => synonym.body === body)
-	);
-
 	// Map through synonyms
-	const mappedSynonyms = finalSynonyms
+	const mappedSynonyms = removeDuplicatedObjsInArr(synonyms, "body")
 		.sort(() => Math.random() - 0.5)
 		.slice(0, 3)
 		.map(({ body, id }) => (

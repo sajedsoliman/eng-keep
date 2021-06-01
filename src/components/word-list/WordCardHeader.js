@@ -6,19 +6,27 @@ import { Fade } from "@material-ui/core";
 // Icons
 import { VolumeUpIcon } from "@heroicons/react/outline";
 
+// Util
+import IF from "../../common-components/util/IF";
+
 function WordCardHeader({ wordData, id, audioRef, wordImage }) {
 	// Import router location to add the word's category if as denoted in the condition below
 	const location = useLocation();
 
+	// Check if the category is idiom or phrase
+	const isPhrase = wordData.category === "phrase";
+
 	return (
 		<Fade in={!Boolean(wordImage)}>
 			<header className="flex items-center">
-				<VolumeUpIcon
-					onClick={() => audioRef.current.play()}
-					className="h-5 mr-2 text-red-400 cursor-pointer"
-				/>
+				<IF condition={!isPhrase}>
+					<VolumeUpIcon
+						onClick={() => audioRef.current.play()}
+						className="h-5 mr-2 text-red-400 cursor-pointer"
+					/>
+				</IF>
 				<RouterLink
-					className={`flex-1 bg-gray-100 rounded-md capitalize pl-1`}
+					className={`flex-1 bg-gray-100 rounded-md capitalize ${isPhrase ? "pr-1" : "pl-1"}`}
 					to={{ pathname: `/words/${wordData.word}`, state: { wordData, id } }}
 				>
 					{wordData.word}

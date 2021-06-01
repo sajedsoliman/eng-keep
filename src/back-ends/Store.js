@@ -127,34 +127,44 @@ function Store() {
 	const handleAddWord = async (wordData) => {
 		const { word, category, sentences, synonyms } = wordData;
 
-		// Get some images (or 1) from unsplash
-		const images = await handleGetImages(wordData.word, 3);
-
-		// Get the (audio src) & more (Synonyms, sentences) the https://dictionaryapi.dev/
-		const moreInfo = await handleGetMoreWordInfo(wordData.word);
-
 		// The sentences that I provide must be highlighted, so I provide an extra prop here
 		const mySentences = sentences.map((sentence) => ({ ...sentence, userProvided: true }));
 
-		const dbWord = {
+		let dbWord = {
 			timestamp: firebase.firestore.FieldValue.serverTimestamp(),
 			word,
 			category,
-			images,
+			images: [],
 			sentences: [...mySentences],
 			synonyms: [...synonyms],
-			...(moreInfo === "word does not exist"
-				? {
-						sentences: [...mySentences],
-						synonyms: [...synonyms],
-						wordAudio: "",
-				  }
-				: {
-						sentences: [...moreInfo.sentences, ...mySentences],
-						synonyms: [...synonyms, ...moreInfo.synonyms],
-						wordAudio: moreInfo.audioSrc,
-				  }),
 		};
+		// If the category is idiom we don't need: images and more info
+
+		if (category !== "phrase") {
+			// Get some images (or 1) from unsplash
+			const images = await handleGetImages(wordData.word, 3);
+
+			// Get the (audio src) & more (Synonyms, sentences) the https://dictionaryapi.dev/
+			const moreInfo = await handleGetMoreWordInfo(wordData.word);
+
+			dbWord = {
+				timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+				word,
+				category,
+				images,
+				...(moreInfo === "word does not exist"
+					? {
+							sentences: [...mySentences],
+							synonyms: [...synonyms],
+							wordAudio: "",
+					  }
+					: {
+							sentences: [...moreInfo.sentences, ...mySentences],
+							synonyms: [...synonyms, ...moreInfo.synonyms],
+							wordAudio: moreInfo.audioSrc,
+					  }),
+			};
+		}
 
 		db.collection("users").doc(loggedUser.id).collection("user-words").add(dbWord);
 	};

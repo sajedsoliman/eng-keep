@@ -22,7 +22,7 @@ function Helpers() {
 		const wordObj = data[0];
 		if (wordObj === undefined) return "word does not exist";
 
-		const audioSrc = wordObj.phonetics[0].audio;
+		const audioSrc = wordObj.phonetics.length != 0 ? wordObj.phonetics[0].audio : "";
 		const definitions = wordObj.meanings.map((meaning) => meaning.definitions).flat();
 		const exampleSentences = [];
 		const synonyms = [];
