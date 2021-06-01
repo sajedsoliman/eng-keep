@@ -1,0 +1,17 @@
+[debug] [2021-06-01T11:39:48.134Z] ----------------------------------------------------------------------
+[debug] [2021-06-01T11:39:48.136Z] Command:       D:\Program Files\nodejs\node.exe C:\Users\Sajed-Hope\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2021-06-01T11:39:48.136Z] CLI Version:   9.5.0
+[debug] [2021-06-01T11:39:48.136Z] Platform:      win32
+[debug] [2021-06-01T11:39:48.136Z] Node Version:  v14.7.0
+[debug] [2021-06-01T11:39:48.138Z] Time:          Tue Jun 01 2021 14:39:48 GMT+0300 (توقيت إسرائيل الصيفي)
+[debug] [2021-06-01T11:39:48.138Z] ----------------------------------------------------------------------
+[debug] [2021-06-01T11:39:48.138Z] 
+[debug] [2021-06-01T11:39:48.145Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-06-01T11:39:48.145Z] > authorizing via signed-in user
+[debug] [2021-06-01T11:39:48.145Z] [iam] checking project eng-keep for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2021-06-01T11:39:48.147Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/eng-keep:testIamPermissions  
+ {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2021-06-01T11:39:48.826Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Tue, 01 Jun 2021 11:39:49 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=132","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-06-01T11:39:48.829Z] > refreshing access token with scopes: []
+[debug] [2021-06-01T11:39:48.830Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>

@@ -45,6 +45,8 @@ function WordCard({ wordData, id }) {
 	// Card styles - classNames
 	const cardStyles = {
 		backgroundImage: `url('${wordImage}')`,
+		minHeight: wordData.category === "phrase" && 272,
+		height: wordData.category === "phrase" && 272,
 	};
 	const cardClassnames = `${
 		wordImage !== "" && "text-white"
@@ -61,7 +63,7 @@ function WordCard({ wordData, id }) {
 					></div>
 				</IF>
 				{/* Word Body */}
-				<div className="relative">
+				<div className="flex flex-col relative h-full">
 					{/* Header */}
 					<WordCardHeader wordImage={wordImage} id={id} wordData={wordData} audioRef={audioRef} />
 
@@ -76,7 +78,7 @@ function WordCard({ wordData, id }) {
 
 					{/* If there is no image hide the content */}
 					<Fade in={!Boolean(wordImage)}>
-						<div>
+						<div className="mt-auto">
 							{/* Sentences */}
 							<WordExamples sentences={sentences} word={word} />
 

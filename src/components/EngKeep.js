@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Route, Switch, useLocation } from "react-router";
+import UnAuthRoute from "../common-components/router/UnAuthRoute";
 
 // UI
 import { Fab, makeStyles } from "@material-ui/core";
@@ -227,13 +228,13 @@ export default function EngKeep() {
 						{wordListComponent}
 					</Route>
 
-					<Route path="/register">
+					<UnAuthRoute path="/register">
 						<Register />
-					</Route>
+					</UnAuthRoute>
 
-					<Route path="/signin">
+					<UnAuthRoute path="/signin">
 						<Login />
-					</Route>
+					</UnAuthRoute>
 
 					<Route path="/:id" exact>
 						{wordListComponent}
