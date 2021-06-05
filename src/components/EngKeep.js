@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Route, Switch, useLocation } from "react-router";
+import { useEffect, useRef, useState } from "react";
+import { Route, Switch, useHistory, useLocation } from "react-router";
 import UnAuthRoute from "../common-components/router/UnAuthRoute";
 
 // UI
@@ -83,11 +83,15 @@ export default function EngKeep() {
 	const classes = useStyles();
 	const loggedUser = AuthedUser();
 
+	// Refs
+	const wordListRef = useRef();
+
 	// Router
-	const location = useLocation();
+	// const history = useHistory();
+	const routerLocation = useLocation();
 
 	// Set the tab depending on the current router path
-	const routerTab = homepageTabs.findIndex((tab) => tab.path === location.pathname);
+	const routerTab = homepageTabs.findIndex((tab) => tab.path === routerLocation.pathname);
 
 	// State vars
 	const [currentTab, setCurrentTab] = useState(routerTab);
@@ -102,11 +106,21 @@ export default function EngKeep() {
 	const { handleGetWordListOnCategory, handleGetWholeWordList, handleGetWordListByDate, loading } =
 		Store();
 
+	// set a listener to get the last opened word (in localStorage) to scroll to it
+	useEffect(() => {
+		const lastOpenedWord = localStorage.getItem("last-opened-word");
+		const inWordListPage = routerLocation.pathname.search("/word") == -1;
+		if (lastOpenedWord !== null && filteredWordList.length !== 0 && inWordListPage) {
+			window.location.href = `#${lastOpenedWord}`;
+			localStorage.removeItem("last-opened-word");
+		}
+	}, [routerLocation.pathname, filteredWordList]);
+
 	// Set a listener to track the current tab and fetch the apt data
 	useEffect(() => {
 		if (loggedUser === "no user") return setWordList([]);
 
-		const currPath = location.pathname;
+		const currPath = routerLocation.pathname;
 
 		// get tab's content depending on the current tab
 		let unsubscribe = handleGetWholeWordList(limit, setWordList);
@@ -185,7 +199,7 @@ export default function EngKeep() {
 
 	// search box display conditions
 	const isSearchDisplay =
-		Object.values(PATHS).includes(location.pathname) &&
+		Object.values(PATHS).includes(routerLocation.pathname) &&
 		loggedUser !== "no user" &&
 		wordList?.length !== 0;
 
@@ -198,12 +212,12 @@ export default function EngKeep() {
 			<HomepageTabs handleChangePeriod={handleChangePeriod} period={period} {...tabsProps} />
 
 			{/* Each tab content depending on the current tab */}
-			<section className={`${classes.wordListWrapper} p-4`}>
+			<section ref={wordListRef} className={`${classes.wordListWrapper} p-4`}>
 				{/* A message to display if the user is not logged in */}
 				<IF
 					condition={
 						loggedUser === "no user" &&
-						!Object.values(NON_SEARCHABLE_PATHS).includes(location.pathname)
+						!Object.values(NON_SEARCHABLE_PATHS).includes(routerLocation.pathname)
 					}
 				>
 					<h2 className="font-medium text-lg text-center">Log in to add &amp; see words</h2>

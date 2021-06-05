@@ -1,4 +1,5 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 
 // UI
 import { Fade, Grow } from "@material-ui/core";
@@ -18,6 +19,13 @@ import WordCardHeader from "./WordCardHeader";
 function WordCard({ wordData, id }) {
 	// Destructuring through the word object
 	const { word, images, sentences, synonyms, wordAudio } = wordData;
+
+	// Router
+	const history = useHistory();
+	const location = useLocation();
+	if (location.state && location.state.lastWordOpen) {
+		history.replace(location.state.lastWordOpen);
+	}
 
 	// State vars
 	const [wordImage, setWordImage] = useState("");
@@ -54,7 +62,7 @@ function WordCard({ wordData, id }) {
 
 	return (
 		<Grow in={true}>
-			<div className={cardClassnames} style={cardStyles}>
+			<div className={cardClassnames} style={cardStyles} id={word}>
 				{/* overlay */}
 				<IF condition={wordImage !== ""}>
 					<div
