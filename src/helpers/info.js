@@ -68,7 +68,7 @@ const DATE_SORTING_PERIODS = [
 	},
 ];
 
-const DEFAULT_WORD_LIST_LIMIT = window.innerWidth < 700 ? 5 : 12;
+const DEFAULT_WORD_LIST_LIMIT = window.innerWidth < 700 ? 5 : 5;
 
 const USER_SIGNIN_INITIAL_VALUES = {
 	email: "",

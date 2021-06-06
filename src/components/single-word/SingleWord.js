@@ -2,7 +2,7 @@
 import { useLocation } from "react-router";
 
 // UI
-import { Grid } from "@material-ui/core";
+import { Grid, makeStyles } from "@material-ui/core";
 
 // Util
 import IF from "../../common-components/util/IF";
@@ -10,7 +10,16 @@ import IF from "../../common-components/util/IF";
 // Components
 import WordCard from "../word-list/WordCard";
 
+// Style
+const useStyles = makeStyles((theme) => ({
+	imageGrid: {
+		padding: 0,
+	},
+}));
+
 function SingleWord() {
+	const classes = useStyles();
+
 	// Import router location to get the word object from the state
 	const location = useLocation();
 	const wordData = location.state.wordData;
@@ -23,14 +32,14 @@ function SingleWord() {
 	const noImgMsg = <h3 className="text-center">No image for this word</h3>;
 
 	return (
-		<div className="p-1 border rounded-md">
-			<Grid container alignItems={"center"} spacing={2}>
+		<div className="p-2 border space-x-2">
+			<Grid container>
 				<Grid item xs={12} md={7}>
 					<WordCard id={id} wordData={wordData} />
 				</Grid>
-				<Grid item xs={12} md={5}>
+				<Grid item xs={12} md={5} className={`${classes.imageGrid}`}>
 					<IF condition={Boolean(rand_image)} elseChildren={noImgMsg}>
-						<img src={rand_image} className="w-full rounded-md" />
+						<img src={rand_image} className="w-full mt-3 lg:mt-0" />
 					</IF>
 				</Grid>
 			</Grid>

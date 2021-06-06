@@ -1,15 +1,19 @@
-import { useEffect, useRef, useState } from "react";
-import { Route, Switch, useHistory, useLocation } from "react-router";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Route, Switch, useLocation } from "react-router";
 import UnAuthRoute from "../common-components/router/UnAuthRoute";
 
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+import { updateSearch } from "../redux/reducers/globals";
+
 // UI
-import { Fab, makeStyles } from "@material-ui/core";
+import { Fab, IconButton, makeStyles } from "@material-ui/core";
 import PopUp from "../common-components/ui/PopUp";
 import HomepageTabs from "./HomepageTabs";
 import Controls from "../common-components/controls/Controls";
 
 // Icons
-import { PlusIcon } from "@heroicons/react/outline";
+import { ArrowDownIcon, PlusIcon } from "@heroicons/react/outline";
 
 // Info (from helpers)
 import {
@@ -31,12 +35,12 @@ import Header from "./header/Header";
 import Store from "../back-ends/Store";
 import { WordList } from "./word-list/WordList";
 import WordForm from "../forms/WordForm";
+import SearchBar from "./word-list/SearchBar";
 
 // Pages
 import Register from "../pages/auth/Register";
 import Login from "../pages/auth/Login";
 import SingleWord from "./single-word/SingleWord";
-import { db } from "../back-ends/database";
 
 // Style
 const useStyles = makeStyles((theme) => ({
@@ -106,24 +110,29 @@ export default function EngKeep() {
 	const { handleGetWordListOnCategory, handleGetWholeWordList, handleGetWordListByDate, loading } =
 		Store();
 
+	// Redux
+	const dispatch = useDispatch();
+	const { searchText: query } = useSelector((state) => state.globals);
+
 	// set a listener to get the last opened word (in localStorage) to scroll to it
-	useEffect(() => {
-		const lastOpenedWord = localStorage.getItem("last-opened-word");
+	useLayoutEffect(() => {
+		const lastScroll = localStorage.getItem("last-scroll");
 		const inWordListPage = routerLocation.pathname.search("/word") == -1;
-		if (lastOpenedWord !== null && filteredWordList.length !== 0 && inWordListPage) {
-			window.location.href = `#${lastOpenedWord}`;
-			localStorage.removeItem("last-opened-word");
+		if (lastScroll !== null && filteredWordList.length !== 0 && inWordListPage) {
+			wordListRef.current.scroll({ top: lastScroll });
+			localStorage.removeItem("last-scroll");
 		}
 	}, [routerLocation.pathname, filteredWordList]);
 
 	// Set a listener to track the current tab and fetch the apt data
 	useEffect(() => {
+		// Don't call the api if there is no user
 		if (loggedUser === "no user") return setWordList([]);
 
 		const currPath = routerLocation.pathname;
 
 		// get tab's content depending on the current tab
-		let unsubscribe = handleGetWholeWordList(limit, setWordList);
+		let unsubscribe;
 
 		if (currPath !== "/") {
 			// Get the category depending on the current tab
@@ -135,26 +144,36 @@ export default function EngKeep() {
 			} else {
 				unsubscribe = handleGetWordListOnCategory(limit, category, setWordList);
 			}
+		} else {
+			unsubscribe = handleGetWholeWordList(limit, setWordList);
 		}
 
 		return () => {
+			console.log(currentTab + " onSnapshot has stopped");
 			// Stop the onSnapshot listener as the current tab changes
 			unsubscribe();
 		};
-	}, [currentTab, period, limit, loggedUser]);
+	}, [currentTab, period, loggedUser]);
 
 	// Set a listener to reset the limit when the currTab or period gets changed
 	useEffect(() => {
+		// Reset Search text (query)
+		dispatch(updateSearch(""));
+
+		// Reset the limit
 		setLimit(DEFAULT_WORD_LIST_LIMIT);
+
+		// Scroll to the top
+		wordListRef.current.scroll(0, 0);
 	}, [currentTab, period]);
 
 	useEffect(() => {
 		if (wordList !== null) {
-			const wordRegex = new RegExp(searchText, "i");
+			const wordRegex = new RegExp(query, "i");
 			const filteredList = wordList.filter((wordDoc) => wordDoc.word.word.search(wordRegex) !== -1);
 			setFilteredWordList(filteredList);
 		}
-	}, [searchText, wordList]);
+	}, [query, wordList, limit]);
 
 	// handle change the current tab
 	const handleChangeTab = (e, newTab) => {
@@ -164,11 +183,6 @@ export default function EngKeep() {
 	// handle toggle add word form popup
 	const handleTogglePopup = () => {
 		setPopupOpen((prev) => !prev);
-	};
-
-	// search text change handling
-	const handleSearchTextChange = (e) => {
-		setSearchText(e.target.value);
 	};
 
 	// Tabs component props
@@ -195,13 +209,25 @@ export default function EngKeep() {
 		setPeriod(newPeriod);
 	};
 
-	const wordListComponent = <WordList list={filteredWordList} />;
+	// user logged in condition
+	const isUserLogged = loggedUser !== "no user";
+
+	// there are more results condition
+	const thereMore = limit < filteredWordList.length;
+
+	// there are results
+	const haveResult = filteredWordList.length > 0;
 
 	// search box display conditions
 	const isSearchDisplay =
 		Object.values(PATHS).includes(routerLocation.pathname) &&
-		loggedUser !== "no user" &&
+		isUserLogged &&
 		wordList?.length !== 0;
+
+	// Word list component
+	const wordListComponent = (
+		<WordList listRef={wordListRef} list={filteredWordList.slice(0, limit)} />
+	);
 
 	return (
 		<main className="bg-gray-100 min-h-screen">
@@ -212,32 +238,27 @@ export default function EngKeep() {
 			<HomepageTabs handleChangePeriod={handleChangePeriod} period={period} {...tabsProps} />
 
 			{/* Each tab content depending on the current tab */}
-			<section ref={wordListRef} className={`${classes.wordListWrapper} p-4`}>
-				{/* A message to display if the user is not logged in */}
-				<IF
-					condition={
-						loggedUser === "no user" &&
-						!Object.values(NON_SEARCHABLE_PATHS).includes(routerLocation.pathname)
-					}
-				>
-					<h2 className="font-medium text-lg text-center">Log in to add &amp; see words</h2>
-				</IF>
+			<Switch>
+				<section ref={wordListRef} className={`${classes.wordListWrapper} p-4`}>
+					{/* A message to display if the user is not logged in */}
+					<IF
+						condition={
+							!isUserLogged &&
+							// This condition is to hide the search bar in signin & register pages
+							!Object.values(NON_SEARCHABLE_PATHS).includes(routerLocation.pathname)
+						}
+					>
+						<h2 className="font-medium text-lg text-center">Log in to add &amp; see words</h2>
+					</IF>
 
-				{/* Search Box - if the path is anything but word-listed tabs (all, new, pronunciation) */}
-				{/* Anything but a single word page */}
-				<IF condition={isSearchDisplay}>
-					<div className="m-auto w-full md:w-6/12 mb-4">
-						<Controls.SearchBox
-							fullWidth={true}
-							value={searchText}
-							handleChange={handleSearchTextChange}
-							placeholder="Search for a word"
-						/>
-					</div>
-				</IF>
+					{/* Search Box - if the path is anything but word-listed tabs (all, new, pronunciation) */}
+					{/* Anything but a single word page */}
+					<IF condition={isSearchDisplay}>
+						<SearchBar />
+					</IF>
 
-				{/* a switch to move between tabs */}
-				<Switch>
+					{/* a switch to move between tabs */}
+
 					<Route path="/" exact>
 						{wordListComponent}
 					</Route>
@@ -254,16 +275,24 @@ export default function EngKeep() {
 						{wordListComponent}
 					</Route>
 
-					<Route path="/words/:word">
-						<SingleWord />
-					</Route>
-				</Switch>
-
-				{/* Loading indicator - disabled for now */}
-			</section>
+					{/* Load more button */}
+					<IF
+						condition={
+							// The third condition is for single page
+							thereMore && haveResult && Object.values(PATHS).includes(routerLocation.pathname)
+						}
+					>
+						<div className="text-center mt-3">
+							<IconButton onClick={() => setLimit((prev) => prev + DEFAULT_WORD_LIST_LIMIT)}>
+								<ArrowDownIcon className="h-5 text-blue-600" />
+							</IconButton>
+						</div>
+					</IF>
+				</section>
+			</Switch>
 
 			{/* Add word form's toggler - if there is a logged user */}
-			<IF condition={loggedUser !== "no user"}>
+			<IF condition={isUserLogged}>
 				<Fab onClick={handleTogglePopup} color="secondary" className={classes.addNewWordBtn}>
 					<PlusIcon className="h-8" />
 				</Fab>

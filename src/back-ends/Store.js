@@ -43,9 +43,9 @@ function Store() {
 			.where("category", "==", category);
 
 		// Get words available count
-		categoryQueryRef.get().then((snapshot) => {
+		/* categoryQueryRef.get().then((snapshot) => {
 			setItemsCount(snapshot.docs.length);
-		});
+		}); */
 
 		return categoryQueryRef.orderBy("timestamp", "desc").onSnapshot((snapshot) => {
 			const words = snapshot.docs.map((doc) => ({ id: doc.id, word: doc.data() }));
@@ -59,14 +59,15 @@ function Store() {
 	const handleGetWholeWordList = (limit, setList) => {
 		// setLoading(true);
 
+		console.log("In store (whole)");
 		// Get words available count
-		db.collection("users")
+		/* 		db.collection("users")
 			.doc(loggedUser.id)
 			.collection("user-words")
 			.get()
 			.then((snapshot) => {
 				setItemsCount(snapshot.docs.length);
-			});
+			}); */
 
 		return db
 			.collection("users")
@@ -77,7 +78,6 @@ function Store() {
 				const words = snapshot.docs.map((doc) => ({ id: doc.id, word: doc.data() }));
 
 				setList(words);
-				// setLoading(false);
 			});
 	};
 
@@ -98,15 +98,14 @@ function Store() {
 			.orderBy("timestamp", "desc");
 
 		// Get words available count
-		dateQueryRef.get().then((snapshot) => {
+		/* dateQueryRef.get().then((snapshot) => {
 			setItemsCount(snapshot.docs.length);
-		});
+		}); */
 
 		return dateQueryRef.onSnapshot((snapshot) => {
 			const words = snapshot.docs.map((doc) => ({ id: doc.id, word: doc.data() }));
 
 			setList(words);
-			// setLoading(false);
 		});
 	};
 	// For logged user - end

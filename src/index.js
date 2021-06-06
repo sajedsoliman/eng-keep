@@ -1,6 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+// Redux
+import store from "./redux/store";
+import { Provider } from "react-redux";
+
 // Components
 import App from "./App";
 
@@ -19,10 +23,12 @@ ReactDOM.render(
 	<React.StrictMode>
 		<ThemeProvider theme={theme}>
 			<Router>
-				<AuthedUserProvider>
-					<CssBaseline />
-					<App />
-				</AuthedUserProvider>
+				<Provider store={store}>
+					<AuthedUserProvider>
+						<CssBaseline />
+						<App />
+					</AuthedUserProvider>
+				</Provider>
 			</Router>
 		</ThemeProvider>
 	</React.StrictMode>,

@@ -9,7 +9,7 @@ import { VolumeUpIcon } from "@heroicons/react/outline";
 // Util
 import IF from "../../common-components/util/IF";
 
-function WordCardHeader({ wordData, id, audioRef, wordImage }) {
+function WordCardHeader({ wordData, id, audioRef, wordImage, listRef }) {
 	// Import router location to add the word's category if as denoted in the condition below
 	const location = useLocation();
 
@@ -27,7 +27,9 @@ function WordCardHeader({ wordData, id, audioRef, wordImage }) {
 				</IF>
 				<RouterLink
 					className={`flex-1 bg-gray-100 rounded-md capitalize ${isPhrase ? "pr-1" : "pl-1"}`}
-					onClick={() => localStorage.setItem("last-opened-word", wordData.word)}
+					onClick={() => {
+						localStorage.setItem("last-scroll", listRef.current.scrollTop);
+					}}
 					to={{ pathname: `/words/${wordData.word}`, state: { wordData, id } }}
 				>
 					{wordData.word}

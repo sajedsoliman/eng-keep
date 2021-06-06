@@ -6,6 +6,8 @@ import { AuthedUser } from "./contexts/UserContext";
 
 // Components
 import EngKeep from "./components/EngKeep";
+import { Route, Switch } from "react-router";
+import SingleWord from "./components/single-word/SingleWord";
 
 function App() {
 	const loggedUser = AuthedUser();
@@ -13,7 +15,15 @@ function App() {
 	// inject Alan Ai button
 	useAlan();
 
-	return <EngKeep />;
+	return (
+		<Switch>
+			<Route path="/words/:word">
+				<SingleWord />
+			</Route>
+
+			<EngKeep />
+		</Switch>
+	);
 }
 
 export default App;

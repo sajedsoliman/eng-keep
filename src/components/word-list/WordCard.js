@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 
 // UI
-import { Fade, Grow } from "@material-ui/core";
+import { Fade } from "@material-ui/core";
 
 // Icons
 
@@ -16,7 +16,7 @@ import WordExamples from "./WordExamples";
 import WordSynonyms from "./WordSynonyms";
 import WordCardHeader from "./WordCardHeader";
 
-function WordCard({ wordData, id }) {
+function WordCard({ wordData, id, listRef }) {
 	// Destructuring through the word object
 	const { word, images, sentences, synonyms, wordAudio } = wordData;
 
@@ -61,45 +61,49 @@ function WordCard({ wordData, id }) {
 	} border p-4 bg-white bg-cover rounded-md overflow-hidden relative shadow-inner bg-center bg-no-repeat`;
 
 	return (
-		<Grow in={true}>
-			<div className={cardClassnames} style={cardStyles} id={word}>
-				{/* overlay */}
-				<IF condition={wordImage !== ""}>
-					<div
-						className="absolute w-full h-full inset-0"
-						style={{ background: "rgb(0 0 0 / 60%)" }}
-					></div>
-				</IF>
-				{/* Word Body */}
-				<div className="flex flex-col relative h-full">
-					{/* Header */}
-					<WordCardHeader wordImage={wordImage} id={id} wordData={wordData} audioRef={audioRef} />
+		<div className={cardClassnames} style={cardStyles} id={word}>
+			{/* overlay */}
+			<IF condition={wordImage !== ""}>
+				<div
+					className="absolute w-full h-full inset-0"
+					style={{ background: "rgb(0 0 0 / 60%)" }}
+				></div>
+			</IF>
+			{/* Word Body */}
+			<div className="flex flex-col relative h-full">
+				{/* Header */}
+				<WordCardHeader
+					listRef={listRef}
+					wordImage={wordImage}
+					id={id}
+					wordData={wordData}
+					audioRef={audioRef}
+				/>
 
-					{/* Word Controls */}
-					<WordControls
-						id={id}
-						wordData={wordData}
-						handleRemoveWord={handleRemoveWord}
-						handleShowImage={handleShowImage}
-						wordImage={wordImage}
-					/>
+				{/* Word Controls */}
+				<WordControls
+					id={id}
+					wordData={wordData}
+					handleRemoveWord={handleRemoveWord}
+					handleShowImage={handleShowImage}
+					wordImage={wordImage}
+				/>
 
-					{/* If there is no image hide the content */}
-					<Fade in={!Boolean(wordImage)}>
-						<div className="mt-auto">
-							{/* Sentences */}
-							<WordExamples sentences={sentences} word={word} />
+				{/* If there is no image hide the content */}
+				<Fade in={!Boolean(wordImage)}>
+					<div className="mt-auto">
+						{/* Sentences */}
+						<WordExamples sentences={sentences} word={word} />
 
-							{/* Synonyms */}
-							<WordSynonyms synonyms={synonyms} />
-						</div>
-					</Fade>
-				</div>
-
-				{/* word audio sound reference */}
-				<audio src={wordAudio} ref={audioRef}></audio>
+						{/* Synonyms */}
+						<WordSynonyms synonyms={synonyms} />
+					</div>
+				</Fade>
 			</div>
-		</Grow>
+
+			{/* word audio sound reference */}
+			<audio src={wordAudio} ref={audioRef}></audio>
+		</div>
 	);
 }
 
