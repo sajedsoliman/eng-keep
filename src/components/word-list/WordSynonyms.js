@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // UI
 import { Grid, IconButton, Tooltip } from "@material-ui/core";
@@ -25,15 +25,21 @@ function WordSynonyms({ synonyms }) {
 	};
 
 	// State vars
-	// for sentences so that i can handle refreshing it
+	// for synonyms so that i can handle refreshing it
 	const [syns, setSyns] = useState(synonyms);
 
-	// handle refresh the sentences list
+	// handle refresh the synonyms list
 	const handleRefreshSynonyms = () => {
 		const newSyns = synonyms.sort(() => Math.random() - 0.5);
 
 		setSyns([...newSyns]);
 	};
+
+	// Set a listener for sents update
+	useEffect(() => {
+		// if synonyms get updated then refresh the list
+		handleRefreshSynonyms();
+	}, [synonyms]);
 
 	// Map through synonyms
 	const mappedSynonyms = removeDuplicatedObjsInArr(syns, "body")

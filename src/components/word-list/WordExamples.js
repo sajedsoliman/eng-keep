@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // UI
 import { RefreshIcon } from "@heroicons/react/outline";
@@ -18,6 +18,12 @@ function WordExamples({ sentences, word }) {
 
 		setSents([...newSentences]);
 	};
+
+	// Set a listener for sents update
+	useEffect(() => {
+		// if sentences get updated then refresh the list
+		handleRefreshSentences();
+	}, [sentences]);
 
 	// Map through sentences
 	let mappedSentences = sents.slice(0, 3).map(({ body, id, userProvided }) => {

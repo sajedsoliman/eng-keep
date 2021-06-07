@@ -59,7 +59,6 @@ function Store() {
 	const handleGetWholeWordList = (limit, setList) => {
 		// setLoading(true);
 
-		console.log("In store (whole)");
 		// Get words available count
 		/* 		db.collection("users")
 			.doc(loggedUser.id)

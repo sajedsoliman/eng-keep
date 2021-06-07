@@ -27,7 +27,7 @@ export const WordList = React.memo(
 				xs: 12,
 				md: 6,
 				lg: 4,
-				key: id,
+				key: id.toString(),
 			};
 
 			return (

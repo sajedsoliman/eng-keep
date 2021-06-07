@@ -30,17 +30,18 @@ import IF from "../common-components/util/IF";
 // Contexts
 import { AuthedUser } from "../contexts/UserContext";
 
+// Pages
+import Register from "../pages/auth/Register";
+import Login from "../pages/auth/Login";
+import SingleWord from "./single-word/SingleWord";
+
 // Components
 import Header from "./header/Header";
 import Store from "../back-ends/Store";
 import { WordList } from "./word-list/WordList";
 import WordForm from "../forms/WordForm";
 import SearchBar from "./word-list/SearchBar";
-
-// Pages
-import Register from "../pages/auth/Register";
-import Login from "../pages/auth/Login";
-import SingleWord from "./single-word/SingleWord";
+import AddWordToggler from "./AddWordToggler";
 
 // Style
 const useStyles = makeStyles((theme) => ({
@@ -51,17 +52,6 @@ const useStyles = makeStyles((theme) => ({
 		height: "calc(100vh - 48px)" /* 48px - tabs' height */,
 		overflowY: "auto",
 		backgroundSize: "cover",
-	},
-	addNewWordBtn: {
-		width: 55,
-		height: 55,
-		marginBottom: 15,
-		position: "fixed",
-		bottom: 80,
-		right: 25,
-		"&:focus": {
-			outline: "none",
-		},
 	},
 	addWordFormWrapper: {
 		// minWidth: 700,
@@ -101,14 +91,11 @@ export default function EngKeep() {
 	const [currentTab, setCurrentTab] = useState(routerTab);
 	const [wordList, setWordList] = useState(null);
 	const [filteredWordList, setFilteredWordList] = useState([]);
-	const [addWordFormPopupOpen, setPopupOpen] = useState(false);
-	const [searchText, setSearchText] = useState("");
 	const [period, setPeriod] = useState("today");
 	const [limit, setLimit] = useState(DEFAULT_WORD_LIST_LIMIT);
 
 	// Import Store component to fetch the word list
-	const { handleGetWordListOnCategory, handleGetWholeWordList, handleGetWordListByDate, loading } =
-		Store();
+	const { handleGetWordListOnCategory, handleGetWholeWordList, handleGetWordListByDate } = Store();
 
 	// Redux
 	const dispatch = useDispatch();
@@ -149,7 +136,6 @@ export default function EngKeep() {
 		}
 
 		return () => {
-			console.log(currentTab + " onSnapshot has stopped");
 			// Stop the onSnapshot listener as the current tab changes
 			unsubscribe();
 		};
@@ -173,16 +159,11 @@ export default function EngKeep() {
 			const filteredList = wordList.filter((wordDoc) => wordDoc.word.word.search(wordRegex) !== -1);
 			setFilteredWordList(filteredList);
 		}
-	}, [query, wordList, limit]);
+	}, [query, wordList]);
 
 	// handle change the current tab
 	const handleChangeTab = (e, newTab) => {
 		setCurrentTab(newTab);
-	};
-
-	// handle toggle add word form popup
-	const handleTogglePopup = () => {
-		setPopupOpen((prev) => !prev);
 	};
 
 	// Tabs component props
@@ -190,18 +171,6 @@ export default function EngKeep() {
 		currentTab,
 		handleChangeTab,
 		isWrapped: true /* Decide wether the label of the tabs should wrap or not */,
-	};
-
-	// Add word popup props
-	const PopUpProps = {
-		infoFunc: {
-			title: "Add a new word",
-			isOpen: addWordFormPopupOpen,
-		},
-		closeHandle: handleTogglePopup,
-		maxWidth: "sm",
-		contentStyles: classes.addWordFormWrapper,
-		dividers: true,
 	};
 
 	// handle change period
@@ -291,21 +260,8 @@ export default function EngKeep() {
 				</section>
 			</Switch>
 
-			{/* Add word form's toggler - if there is a logged user */}
-			<IF condition={isUserLogged}>
-				<Fab onClick={handleTogglePopup} color="secondary" className={classes.addNewWordBtn}>
-					<PlusIcon className="h-8" />
-				</Fab>
-			</IF>
-
-			{/* Add word popup */}
-			<PopUp {...PopUpProps}>
-				<WordForm
-					action="add"
-					wordData={wordDataInitialValues}
-					handleClosePopup={handleTogglePopup}
-				/>
-			</PopUp>
+			{/* New word form */}
+			<AddWordToggler />
 		</main>
 	);
 }
