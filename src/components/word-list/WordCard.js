@@ -16,7 +16,7 @@ import WordExamples from "./WordExamples";
 import WordSynonyms from "./WordSynonyms";
 import WordCardHeader from "./WordCardHeader";
 
-function WordCard({ wordData, id, listRef }) {
+function WordCard({ wordData, id, listRef, limit, period }) {
 	// Destructuring through the word object
 	const { word, images, sentences, synonyms, wordAudio } = wordData;
 
@@ -73,6 +73,8 @@ function WordCard({ wordData, id, listRef }) {
 			<div className="flex flex-col relative h-full">
 				{/* Header */}
 				<WordCardHeader
+					period={period}
+					limit={limit}
 					listRef={listRef}
 					wordImage={wordImage}
 					id={id}

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useLocation } from "react-router";
 
 // UI
-import { Grid, makeStyles } from "@material-ui/core";
+import { Grid, IconButton, makeStyles } from "@material-ui/core";
 
 // Util
 import IF from "../../common-components/util/IF";
@@ -50,10 +50,12 @@ function SingleWord() {
 					<IF condition={Boolean(randomImage)} elseChildren={noImgMsg}>
 						<div className="relative rounded-md overflow-hidden mt-2 h-72">
 							<div
-								style={{ backgroundColor: "rgba(0, 0, 0, .5)" }}
-								className="w-full h-full inset-0 absolute flex items-center justify-center"
+								style={{ backgroundColor: "rgba(0, 0, 0, .55)" }}
+								className="w-full h-full inset-0 absolute z-10 flex items-center justify-center"
 							>
-								<RefreshIcon onClick={handleRandomizeImage} className="h-6 text-white" />
+								<IconButton onClick={handleRandomizeImage}>
+									<RefreshIcon className="h-6 text-white cursor-pointer" />
+								</IconButton>
 							</div>
 							<img src={randomImage} className="w-full h-full absolute object-cover" />
 						</div>

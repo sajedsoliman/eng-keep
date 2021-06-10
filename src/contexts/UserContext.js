@@ -5,7 +5,11 @@ const AuthedUserContext = React.createContext();
 
 // custom hook to access the user
 export function AuthedUser() {
-	return useContext(AuthedUserContext);
+	const context = useContext(AuthedUserContext);
+	if (context === null || context === undefined)
+		throw new Error("AuthedUser must be used within a AuthedUserProvider");
+
+	return context;
 }
 
 export function AuthedUserProvider({ children }) {

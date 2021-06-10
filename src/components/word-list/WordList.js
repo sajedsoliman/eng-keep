@@ -16,7 +16,7 @@ import { AuthedUser } from "../../contexts/UserContext";
 import WordCard from "./WordCard";
 
 export const WordList = React.memo(
-	({ list, listRef }) => {
+	({ list, listRef, limit, period }) => {
 		const loggedUser = AuthedUser();
 
 		// mapping through the given word list
@@ -32,7 +32,7 @@ export const WordList = React.memo(
 
 			return (
 				<Grid {...gridProps}>
-					<WordCard listRef={listRef} wordData={word} id={id} />
+					<WordCard period={period} limit={limit} listRef={listRef} wordData={word} id={id} />
 				</Grid>
 			);
 		});

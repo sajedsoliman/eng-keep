@@ -104,12 +104,26 @@ export default function EngKeep() {
 	// set a listener to get the last opened word (in localStorage) to scroll to it
 	useLayoutEffect(() => {
 		const lastScroll = localStorage.getItem("last-scroll");
+		const lastLimit = localStorage.getItem("last-limit");
+		const lastPeriod = localStorage.getItem("last-period");
 		const inWordListPage = routerLocation.pathname.search("/word") == -1;
-		if (lastScroll !== null && filteredWordList.length !== 0 && inWordListPage) {
+		if (lastScroll !== null && inWordListPage) {
 			wordListRef.current.scroll({ top: lastScroll });
-			localStorage.removeItem("last-scroll");
+
+			if (lastLimit !== null) {
+				setLimit(parseInt(lastLimit));
+			} else {
+				localStorage.removeItem("last-scroll");
+			}
+			if (lastPeriod === null) {
+				localStorage.removeItem("last-limit");
+			}
+			if (lastPeriod !== null) {
+				setPeriod(lastPeriod);
+				localStorage.removeItem("last-period");
+			}
 		}
-	}, [routerLocation.pathname, filteredWordList]);
+	}, [routerLocation.pathname, filteredWordList, limit]);
 
 	// Set a listener to track the current tab and fetch the apt data
 	useEffect(() => {
@@ -147,7 +161,9 @@ export default function EngKeep() {
 		dispatch(updateSearch(""));
 
 		// Reset the limit
-		setLimit(DEFAULT_WORD_LIST_LIMIT);
+		if (localStorage.getItem("last-scroll") === null) {
+			setLimit(DEFAULT_WORD_LIST_LIMIT);
+		}
 
 		// Scroll to the top
 		wordListRef.current.scroll(0, 0);
@@ -195,7 +211,12 @@ export default function EngKeep() {
 
 	// Word list component
 	const wordListComponent = (
-		<WordList listRef={wordListRef} list={filteredWordList.slice(0, limit)} />
+		<WordList
+			listRef={wordListRef}
+			list={filteredWordList.slice(0, limit)}
+			period={period}
+			limit={limit}
+		/>
 	);
 
 	return (
