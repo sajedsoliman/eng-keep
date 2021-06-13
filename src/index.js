@@ -13,6 +13,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 
 // Contexts
 import { AuthedUserProvider } from "./contexts/UserContext";
+import { NotificationContext } from "./contexts/NotificationContext";
 
 // styles
 import { CssBaseline, ThemeProvider } from "@material-ui/core";
@@ -22,14 +23,16 @@ import "./styles/style.css";
 ReactDOM.render(
 	<React.StrictMode>
 		<ThemeProvider theme={theme}>
-			<Router>
-				<Provider store={store}>
-					<AuthedUserProvider>
-						<CssBaseline />
-						<App />
-					</AuthedUserProvider>
-				</Provider>
-			</Router>
+			<NotificationContext>
+				<Router>
+					<Provider store={store}>
+						<AuthedUserProvider>
+							<CssBaseline />
+							<App />
+						</AuthedUserProvider>
+					</Provider>
+				</Router>
+			</NotificationContext>
 		</ThemeProvider>
 	</React.StrictMode>,
 	document.getElementById("root")

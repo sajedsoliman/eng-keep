@@ -13,9 +13,11 @@ import { getDateOnPeriod } from "../helpers/functions";
 
 // Contexts
 import { AuthedUser } from "../contexts/UserContext";
+import { useAlert } from "../contexts/NotificationContext";
 
 function Store() {
 	const loggedUser = AuthedUser();
+	const processSettings = useAlert();
 
 	// Get the needed helpers function
 	const {
@@ -24,6 +26,7 @@ function Store() {
 		wordDicAbility,
 		addUserToDb,
 		handleUploadUserAvatar,
+		isWordExisted,
 	} = Helpers();
 
 	// Router
@@ -83,7 +86,6 @@ function Store() {
 	// get word list depends on the given period
 	const handleGetWordListByDate = (limit, period, setList) => {
 		// setLoading(true);
-
 		const startDate = getDateOnPeriod(period).startDate;
 		// Which is today - endDate
 		const endDate = getDateOnPeriod(period).endDate;
@@ -122,8 +124,13 @@ function Store() {
 	};
 
 	// Handle add word to db - and will be used with AI
-	const handleAddWord = async (wordData) => {
+	const handleAddWord = async (wordData, needMoreInfo) => {
 		const { word, category, sentences, synonyms } = wordData;
+
+		// Check for the word existence
+		const isExisted = await isWordExisted(word);
+
+		if (isExisted) return processSettings("error", `You added this word (${word}) before`);
 
 		// The sentences that I provide must be highlighted, so I provide an extra prop here
 		const mySentences = sentences.map((sentence) => ({ ...sentence, userProvided: true }));
@@ -150,7 +157,7 @@ function Store() {
 				word,
 				category,
 				images,
-				...(moreInfo === "word does not exist"
+				...(moreInfo === "word does not exist" || !needMoreInfo
 					? {
 							sentences: [...mySentences],
 							synonyms: [...synonyms],

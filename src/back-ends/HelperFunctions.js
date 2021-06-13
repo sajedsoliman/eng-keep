@@ -1,10 +1,15 @@
 // Firebase
 import { db, storage } from "./database";
 
+// Contexts
+import { AuthedUser } from "../contexts/UserContext";
+
 // info
 import { dicApiReq, unsplashApiReq } from "../helpers/info";
 
 function Helpers() {
+	const loggedUser = AuthedUser();
+
 	// Handle get images depending on the given word
 	const handleGetImages = async (word, imagesCount = 3) => {
 		const res = await fetch(unsplashApiReq(word));
@@ -85,12 +90,26 @@ function Helpers() {
 			.then((url) => url);
 	};
 
+	// check if the word has already added or hasn't
+	const isWordExisted = (word) => {
+		return db
+			.collection("users")
+			.doc(loggedUser.id)
+			.collection("user-words")
+			.where("word", "==", word)
+			.get()
+			.then((snapshot) => {
+				return !snapshot.empty;
+			});
+	};
+
 	return {
 		handleGetImages,
 		handleGetMoreWordInfo,
 		wordDicAbility,
 		addUserToDb,
 		handleUploadUserAvatar,
+		isWordExisted,
 	};
 }
 

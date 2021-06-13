@@ -11,7 +11,8 @@ export function useForm(initialValues, validationOnInput = true, validation) {
 		setValues((prev) => {
 			return {
 				...prev,
-				[name]: name == "isPermanent" || name == "isSeasoned" ? checked : value,
+				[name]:
+					name == "isPermanent" || name == "isSeasoned" || name == "needMoreInfo" ? checked : value,
 			};
 		});
 

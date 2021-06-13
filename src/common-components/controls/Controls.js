@@ -6,6 +6,9 @@ import RadioGroup from "./RadioGroup";
 import SelectBoxInput from "./SelectBoxInput";
 import ReusableCheckBox from "./ReusableCheckBox";
 import FilePondCircular from "./FilePondCircular";
+import Toggler from "./Toggler";
+
+// import DatePicker from "./DatePicker";
 
 export default {
 	SearchBox,
@@ -16,4 +19,6 @@ export default {
 	ReusableCheckBox,
 	SelectBoxInput,
 	FilePondCircular,
+	Toggler,
+	// DatePicker,
 };

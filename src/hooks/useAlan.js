@@ -6,13 +6,19 @@ import { AuthedUser } from "../contexts/UserContext";
 
 // Components
 import Store from "../back-ends/Store";
+import { db } from "../back-ends/database";
+import { getDateOnPeriod } from "../helpers/functions";
 
 const COMMANDS = {
 	ADD_WORD: "add-word",
+	SAY_REVISION: "say-revision",
 };
 
 export default function useAlan() {
 	const loggedUser = AuthedUser();
+
+	// Import Store component to get data from the database
+	const { handleGetWordListByDate } = Store();
 
 	// Refs
 	const alanBtnContainer = useRef();
@@ -35,13 +41,36 @@ export default function useAlan() {
 		[alanInstance]
 	);
 
+	const sayRev = useCallback(
+		async ({ detail }) => {
+			// Get today's words from Store component
+			db.collection("users")
+				.doc(loggedUser.id)
+				.collection("user-words")
+				.where("timestamp", ">=", getDateOnPeriod("today").startDate)
+				.orderBy("timestamp", "asc")
+				.get()
+				.then((snapshot) => {
+					const todays_words = snapshot.docs.map((doc) => doc.data());
+					todays_words.forEach((wordObj) => {
+						const wannaSayExample =
+							detail.wannaSayExample === "yes" ? `example: ${wordObj.sentences[0].body}` : "";
+						alanInstance.playText(`${wordObj.word}. ${wannaSayExample}`);
+					});
+				});
+		},
+		[alanInstance]
+	);
+
 	useEffect(() => {
 		window.addEventListener(COMMANDS.ADD_WORD, addWord);
+		window.addEventListener(COMMANDS.SAY_REVISION, sayRev);
 
 		return () => {
 			window.removeEventListener(COMMANDS.ADD_WORD, addWord);
+			window.removeEventListener(COMMANDS.SAY_REVISION, sayRev);
 		};
-	}, [addWord]);
+	}, [addWord, sayRev]);
 
 	useEffect(() => {
 		// Problem: when logged out it doesn't disappear
@@ -50,7 +79,6 @@ export default function useAlan() {
 			setAlanInstance(null);
 		}
 		if (alanInstance != null || loggedUser === "no user") return;
-
 		setAlanInstance(
 			alanBtn({
 				bottom: "25px",

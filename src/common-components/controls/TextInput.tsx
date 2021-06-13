@@ -13,7 +13,7 @@ export default function TextInput({
 	name,
 	inputRef,
 	...otherProps
-}) {
+}: any) {
 	return (
 		<TextField
 			{...(validationError && { error: true, helperText: validationError })}

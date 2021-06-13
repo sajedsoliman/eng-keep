@@ -19,12 +19,13 @@ import { WORD_CATEGORIES } from "../helpers/info";
 // Components
 import Store from "../back-ends/Store";
 
-function WordForm({ wordData, handleClosePopup, action, wordDocId }) {
+function WordForm({ wordData, handleClosePopup, action, wordDocId }: any) {
 	const { sentences, synonyms, category, word } = wordData;
 
 	// State vars
 	const [sens, setSens] = useState(sentences);
 	const [syns, setSyns] = useState(synonyms);
+	const [needMoreInfo, setNeedMoreInfo] = useState(true);
 	const [wordAvailability, setWordAvailability] = useState("");
 
 	// Import useForm
@@ -73,7 +74,7 @@ function WordForm({ wordData, handleClosePopup, action, wordDocId }) {
 		if (action === "update") {
 			handleUpdateWord(wordDocId, word);
 		} else {
-			handleAddWord(word);
+			handleAddWord(word, needMoreInfo);
 		}
 	};
 
@@ -115,17 +116,28 @@ function WordForm({ wordData, handleClosePopup, action, wordDocId }) {
 			</div>
 
 			{/* action => Submit(add, update) button & check word availability in the dictionary */}
-			<div className="mt-5 flex space-x-2">
-				<Button type="submit" color="secondary" variant="outlined">
-					<span className="capitalize">{action}</span>
-				</Button>
-
-				<div className="flex items-center">
-					<Button onClick={handleCheckWord} type="button" color="primary" variant="outlined">
-						<span className="capitalize">Check Word In Dic</span>
+			<div className="mt-5 flex justify-between flex-wrap">
+				<div className="flex space-x-2 ">
+					<Button type="submit" color="secondary" variant="outlined">
+						<span className="capitalize">{action}</span>
 					</Button>
 
-					<p className={`ml-2 text-sm text-${availabilityMsgStyle}-600`}>{wordAvailability}</p>
+					<div className="flex items-center">
+						<Button onClick={handleCheckWord} type="button" color="primary" variant="outlined">
+							<span className="capitalize">Dic. Check</span>
+						</Button>
+
+						<p className={`ml-2 text-sm text-${availabilityMsgStyle}-600`}>{wordAvailability}</p>
+					</div>
+				</div>
+				{/* a switch for (more info) need */}
+				<div>
+					<Controls.Toggler
+						checked={needMoreInfo}
+						label="Dic. info"
+						inputChange={(e) => setNeedMoreInfo(e.target.checked)}
+						color="secondary"
+					/>
 				</div>
 			</div>
 		</Form>

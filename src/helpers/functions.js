@@ -18,6 +18,15 @@ function getDateOnPeriod(period) {
 			break;
 		case "last-month":
 			currDate.setMonth(currMonth - 1);
+			break;
+		// Custom date
+		default:
+			currDate.setDate(period.getDate());
+			currDate.setMonth(period.getMonth());
+			currDate.setFullYear(period.getFullYear());
+			endDate = new Date(
+				`${period.getFullYear()}-${period.getMonth() + 1}-${period.getDate() + 1}`
+			);
 	}
 
 	const startDate = new Date(
