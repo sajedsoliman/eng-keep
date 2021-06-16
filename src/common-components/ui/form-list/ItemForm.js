@@ -8,7 +8,7 @@ import Controls from "../../controls/Controls";
 import { TrashIcon } from "@heroicons/react/outline";
 
 // Hooks
-import { Form } from "../../../hooks/useForm";
+import { Form } from "../../hooks/useForm";
 
 // Components
 import SpeechToText from "../../controls/SpeechToText";
@@ -24,13 +24,9 @@ function ItemForm({ handleUpdate, handleDelete, label, value, lastNewAddedFormId
 
 	useEffect(() => {
 		// Add a condition not to set inputValue on load
-		if (result != "") {
-			handleUpdate(value.id, result);
-			setInputValue(result);
-		}
+		if (result != "") setInputValue(result);
 	}, [result]);
 
-	// Set a listener to track the last added form and autofocus it when it gets added
 	useEffect(() => {
 		// handle focus the last added new form's input
 		if (lastNewAddedFormId === value.id) {
@@ -42,7 +38,6 @@ function ItemForm({ handleUpdate, handleDelete, label, value, lastNewAddedFormId
 	const handleDeleteItem = () => {
 		// Stop the mic if is already starting
 		handleStartStopListening();
-
 		handleDelete(value.id);
 	};
 
@@ -59,7 +54,7 @@ function ItemForm({ handleUpdate, handleDelete, label, value, lastNewAddedFormId
 			/>
 
 			<div className="flex">
-				{/* using the IconButton for focusing state */}
+				{/* button for focus state */}
 				<IconButton onClick={handleStartStopListening} color="primary" size="small">
 					{listeningIcon}
 				</IconButton>

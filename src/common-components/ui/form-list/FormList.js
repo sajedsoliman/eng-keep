@@ -73,7 +73,7 @@ function FormList({ list, setList, inputLabel, listLabel, wrapperClassName }) {
 			</div>
 
 			{/* Forms */}
-			<div>{mappedForms}</div>
+			{mappedForms}
 
 			{/* Add form button - in the bottom */}
 			{/* <div className="mt-2 text-center">
