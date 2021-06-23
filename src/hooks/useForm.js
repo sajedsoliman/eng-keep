@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 export function useForm(initialValues, validationOnInput = true, validation) {
 	const [values, setValues] = useState(initialValues);

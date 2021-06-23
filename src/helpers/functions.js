@@ -21,6 +21,8 @@ function getDateOnPeriod(period) {
 			break;
 		// Custom date
 		default:
+			// change the period's type to (date object) because LocalStorage makes it as string
+			period = new Date(period);
 			currDate.setDate(period.getDate());
 			currDate.setMonth(period.getMonth());
 			currDate.setFullYear(period.getFullYear());

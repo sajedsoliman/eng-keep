@@ -2,10 +2,10 @@
 import { Link as RouterLink } from "react-router-dom";
 
 // UI
-import { LoginIcon, LogoutIcon, UserAddIcon } from "@heroicons/react/outline";
+import { AppBar, Avatar, Button, IconButton, makeStyles, Toolbar } from "@material-ui/core";
 
 // Icon
-import { AppBar, Avatar, Button, IconButton, makeStyles, Toolbar } from "@material-ui/core";
+import { LoginIcon, LogoutIcon, UserAddIcon } from "@heroicons/react/outline";
 
 // Util
 import IF from "../../common-components/util/IF";

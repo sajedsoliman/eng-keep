@@ -7,19 +7,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateSearch } from "../redux/reducers/globals";
 
 // UI
-import { Fab, IconButton, makeStyles } from "@material-ui/core";
-import PopUp from "../common-components/ui/PopUp";
+import { IconButton, makeStyles } from "@material-ui/core";
 import HomepageTabs from "./HomepageTabs";
-import Controls from "../common-components/controls/Controls";
 
 // Icons
-import { ArrowDownIcon, PlusIcon } from "@heroicons/react/outline";
+import { ArrowDownIcon } from "@heroicons/react/outline";
 
 // Info (from helpers)
 import {
 	DEFAULT_WORD_LIST_LIMIT,
 	PATHS,
-	wordDataInitialValues,
 	homepageTabs,
 	NON_SEARCHABLE_PATHS,
 } from "../helpers/info";
@@ -33,13 +30,11 @@ import { AuthedUser } from "../contexts/UserContext";
 // Pages
 import Register from "../pages/auth/Register";
 import Login from "../pages/auth/Login";
-import SingleWord from "./single-word/SingleWord";
 
 // Components
 import Header from "./header/Header";
 import Store from "../back-ends/Store";
 import { WordList } from "./word-list/WordList";
-import WordForm from "../forms/WordForm";
 import SearchBar from "./word-list/SearchBar";
 import AddWordToggler from "./AddWordToggler";
 

@@ -43,7 +43,7 @@ function PeriodMenu({ open, anchorEl, handleChangePeriod, handleTogglePeriodMenu
 		</MenuItem>
 	));
 
-	const isCustomDate = typeof currentPeriod === "object";
+	const isCustomDate = typeof currentPeriod === "object" || currentPeriod.label === undefined;
 
 	useEffect(() => {
 		if (!isCustomDate) setSelectedDate(new Date());

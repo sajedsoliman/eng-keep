@@ -10,8 +10,8 @@ import { Grid, IconButton, makeStyles } from "@material-ui/core";
 import IF from "../../common-components/util/IF";
 
 // Components
-import WordCard from "../word-list/WordCard";
 import { RefreshIcon } from "@heroicons/react/outline";
+import WordCard from "../word-list/WordCard";
 
 // Style
 const useStyles = makeStyles((theme) => ({
@@ -50,7 +50,7 @@ function SingleWord() {
 					<IF condition={Boolean(randomImage)} elseChildren={noImgMsg}>
 						<div className="relative rounded-md overflow-hidden mt-2 h-72">
 							<div
-								style={{ backgroundColor: "rgba(0, 0, 0, .55)" }}
+								style={{ backgroundColor: "rgba(0, 0, 0, .40)" }}
 								className="w-full h-full inset-0 absolute z-10 flex items-center justify-center"
 							>
 								<IconButton onClick={handleRandomizeImage}>

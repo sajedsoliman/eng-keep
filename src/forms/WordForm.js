@@ -3,23 +3,24 @@ import { useEffect, useState } from "react";
 // UI
 import { Button } from "@material-ui/core";
 import Controls from "../common-components/controls/Controls";
-import FormList from "../common-components/ui/form-list/FormList";
 
 // Icons
 
 // Hooks
-import { Form, useForm } from "../hooks/useForm";
+import { useForm, Form } from "../hooks/useForm";
 
 // Util
-import IF from "../common-components/util/IF";
 
 // Info
 import { WORD_CATEGORIES } from "../helpers/info";
 
 // Components
 import Store from "../back-ends/Store";
+import FormList from "../common-components/ui/form-list/FormList";
 
-function WordForm({ wordData, handleClosePopup, action, wordDocId }: any) {
+export default function WordForm(props) {
+	const { wordData, handleClosePopup, action, wordDocId } = props;
+
 	const { sentences, synonyms, category, word } = wordData;
 
 	// State vars
@@ -143,5 +144,3 @@ function WordForm({ wordData, handleClosePopup, action, wordDocId }: any) {
 		</Form>
 	);
 }
-
-export default WordForm;

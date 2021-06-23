@@ -12,14 +12,14 @@ interface Props {
 	color?: "primary" | "secondary";
 }
 
-const Toggler: React.FC<Props> = ({
+function Toggler({
 	inputChange,
 	checked,
 	name,
 	label,
 	color = "primary",
 	placement = "end",
-}) => {
+}: Props) {
 	return (
 		<FormControlLabel
 			value={checked}
@@ -28,6 +28,6 @@ const Toggler: React.FC<Props> = ({
 			labelPlacement={placement}
 		/>
 	);
-};
+}
 
 export default Toggler;
