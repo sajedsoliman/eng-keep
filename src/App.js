@@ -50,16 +50,12 @@ function App() {
 
 	return (
 		<Switch>
-			<Route path="/" exact>
+			<Route path="/">
 				<EngKeep />
 			</Route>
 
 			<Route path="/words/:word">
 				<SingleWord />
-			</Route>
-
-			<Route>
-				<h1>Page Not found</h1>
 			</Route>
 		</Switch>
 	);
