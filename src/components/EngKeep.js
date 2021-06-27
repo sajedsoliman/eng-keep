@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Route, Switch, useLocation } from "react-router";
+import { Route, Switch, useLocation } from "react-router-dom";
 import UnAuthRoute from "../common-components/router/UnAuthRoute";
 
 // Redux
@@ -37,6 +37,7 @@ import Store from "../back-ends/Store";
 import { WordList } from "./word-list/WordList";
 import SearchBar from "./word-list/SearchBar";
 import AddWordToggler from "./AddWordToggler";
+import ScrollTopButton from "./ScrollTopButton";
 
 // Style
 const useStyles = makeStyles((theme) => ({
@@ -275,6 +276,9 @@ export default function EngKeep() {
 					</IF>
 				</section>
 			</Switch>
+
+			{/* Scroll to top button */}
+			<ScrollTopButton wordListRef={wordListRef} />
 
 			{/* New word form */}
 			<AddWordToggler />

@@ -1,9 +1,9 @@
 import SearchBox from "./SearchBox";
 import TextInput from "./TextInput";
 import TextArea from "./TextArea";
-// import FilePondUploader from "./FilePondUploader";
+import FilePondUploader from "./FilePondUploader";
 import PasswordInput from "./PasswordInput";
-// import FilePondCircular from "./FilePondCircular";
+import FilePondCircular from "./FilePondCircular";
 import RadioGroup from "./RadioGroup";
 import ReusableCheckBox from "./ReusableCheckBox";
 import Toggler from "./Toggler";
@@ -13,9 +13,9 @@ const Controls = {
 	SearchBox,
 	TextInput,
 	TextArea,
-	// FilePondUploader,
+	FilePondUploader,
 	PasswordInput,
-	// FilePondCircular,
+	FilePondCircular,
 	RadioGroup,
 	ReusableCheckBox,
 	Toggler,

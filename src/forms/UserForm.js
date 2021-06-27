@@ -30,6 +30,7 @@ function UserForm({
 	const avatarUploaderProps = {
 		onAddFile: (error, file) => handleAddAvatar(file.file),
 		label: "Avatar",
+		size: "small",
 	};
 
 	return (

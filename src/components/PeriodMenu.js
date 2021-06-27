@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { ClickAwayListener, makeStyles, MenuItem, MenuList } from "@material-ui/core";
 import CustomMenuList from "../common-components/ui/CustomMenuList";
 import "date-fns";
-import { DatePicker, KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 
 // Info
@@ -43,7 +43,9 @@ function PeriodMenu({ open, anchorEl, handleChangePeriod, handleTogglePeriodMenu
 		</MenuItem>
 	));
 
-	const isCustomDate = typeof currentPeriod === "object" || currentPeriod.label === undefined;
+	const isCustomDate =
+		typeof currentPeriod === "object" ||
+		(typeof currentPeriod === "object" && currentPeriod.label === undefined);
 
 	useEffect(() => {
 		if (!isCustomDate) setSelectedDate(new Date());
