@@ -1,10 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+
+// router
 import { Route, Switch, useLocation } from "react-router-dom";
 import UnAuthRoute from "../common-components/router/UnAuthRoute";
-
-// Redux
-import { useSelector, useDispatch } from "react-redux";
-import { updateSearch } from "../redux/reducers/globals";
 
 // UI
 import { IconButton, makeStyles } from "@material-ui/core";
@@ -89,13 +87,10 @@ export default function EngKeep() {
 	const [filteredWordList, setFilteredWordList] = useState([]);
 	const [period, setPeriod] = useState("today");
 	const [limit, setLimit] = useState(DEFAULT_WORD_LIST_LIMIT);
+	const [query, setQuery] = useState("");
 
 	// Import Store component to fetch the word list
 	const { handleGetWordListOnCategory, handleGetWholeWordList, handleGetWordListByDate } = Store();
-
-	// Redux
-	const dispatch = useDispatch();
-	const { searchText: query } = useSelector((state) => state.globals);
 
 	// set a listener to get the last opened word (in localStorage) to scroll to it
 	useLayoutEffect(() => {
@@ -154,7 +149,7 @@ export default function EngKeep() {
 	// Set a listener to reset the limit when the currTab or period gets changed
 	useEffect(() => {
 		// Reset Search text (query)
-		dispatch(updateSearch(""));
+		setQuery("");
 
 		// Reset the limit
 		if (localStorage.getItem("last-scroll") === null) {
@@ -171,7 +166,21 @@ export default function EngKeep() {
 			const filteredList = wordList.filter((wordDoc) => wordDoc.word.word.search(wordRegex) !== -1);
 			setFilteredWordList(filteredList);
 		}
-	}, [query, wordList]);
+	}, [wordList]);
+
+	// handle change query
+	const handleChangeQuery = (e) => {
+		const value = e.target.value;
+
+		// change the input value
+		setQuery(value);
+
+		// startTransition the list value
+		const wordRegex = new RegExp(value, "i");
+		const filteredList = wordList.filter((wordDoc) => wordDoc.word.word.search(wordRegex) !== -1);
+
+		setFilteredWordList(filteredList);
+	};
 
 	// handle change the current tab
 	const handleChangeTab = (e, newTab) => {
@@ -240,7 +249,7 @@ export default function EngKeep() {
 					{/* Search Box - if the path is anything but word-listed tabs (all, new, pronunciation) */}
 					{/* Anything but a single word page */}
 					<IF condition={isSearchDisplay}>
-						<SearchBar />
+						<SearchBar query={query} handleChangeQuery={handleChangeQuery} />
 					</IF>
 
 					{/* a switch to move between tabs */}

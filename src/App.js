@@ -50,13 +50,11 @@ function App() {
 
 	return (
 		<Switch>
-			<Route path="/">
-				<EngKeep />
-			</Route>
-
 			<Route path="/words/:word">
 				<SingleWord />
 			</Route>
+
+			<EngKeep />
 		</Switch>
 	);
 }

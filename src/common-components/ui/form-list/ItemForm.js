@@ -24,7 +24,13 @@ function ItemForm({ handleUpdate, handleDelete, label, value, lastNewAddedFormId
 
 	useEffect(() => {
 		// Add a condition not to set inputValue on load
-		if (result != "") setInputValue(result);
+		if (result != "") {
+			// update the input value
+			setInputValue(result);
+
+			// update it on state
+			handleUpdate(value.id, result);
+		}
 	}, [result]);
 
 	useEffect(() => {

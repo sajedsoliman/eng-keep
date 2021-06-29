@@ -64,8 +64,8 @@ export default function WordForm(props) {
 		const word = {
 			category: wordInfo.category.toLowerCase(),
 			word: wordInfo.word.toLowerCase(),
-			sentences: sens,
-			synonyms: syns,
+			sentences: sens.filter((sentence) => sentence.body !== ""),
+			synonyms: syns.filter((synonym) => synonym.body !== ""),
 		};
 
 		// Close the popup

@@ -1,5 +1,3 @@
-import React from "react";
-
 // material imports
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -8,12 +6,12 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { BadgeCheckIcon } from "@heroicons/react/solid";
 
 export default function SelectBoxInput(props) {
-	const { onChange, validationError, value, items, name, label } = props;
+	const { inputChange, validationError, value, items, name, label } = props;
 
 	return (
 		<TextField
 			{...(validationError && { error: true, helperText: validationError })}
-			onChange={onChange}
+			onChange={inputChange}
 			name={name}
 			fullWidth
 			variant="outlined"
