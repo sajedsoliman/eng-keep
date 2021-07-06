@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 	speedDial: {
 		position: "fixed",
 		right: 15,
-		bottom: 70,
+		bottom: 13,
 	},
 	addWordActionFab: {
 		backgroundColor: theme.palette.secondary.main,
