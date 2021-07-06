@@ -1,5 +1,5 @@
 {
-	"name": "alan-react",
+	"name": "engkeep",
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
@@ -31,6 +31,7 @@
 		"react-dom": "^17.0.2",
 		"react-filepond": "^7.1.1",
 		"react-modal": "^3.11.2",
+		"react-redux": "^7.2.4",
 		"react-router-dom": "^5.2.0",
 		"react-scripts": "^4.0.1",
 		"typescript": "^4.3.2",
@@ -38,7 +39,7 @@
 	},
 	"scripts": {
 		"start": "rm -rf tsconfig.json && env-cmd -f .env.staging react-scripts start",
-		"build": "react-scripts build",
+		"build": "CI=false react-scripts build",
 		"build:prod": "env-cmd -f .env.prod react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"
