@@ -3,9 +3,10 @@ import { useState } from "react";
 // UI
 import { Fab, makeStyles } from "@material-ui/core";
 import PopUp from "../common-components/ui/PopUp";
+import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
 
 // Icons
-import { PlusIcon } from "@heroicons/react/outline";
+import { Add } from "@material-ui/icons";
 
 // Info
 import { wordDataInitialValues } from "../helpers/info";
@@ -21,17 +22,7 @@ import WordForm from "../forms/WordForm";
 
 // Styles
 const useStyles = makeStyles((theme) => ({
-	addNewWordBtn: {
-		width: 55,
-		height: 55,
-		marginBottom: 15,
-		position: "fixed",
-		bottom: 80,
-		right: 25,
-		"&:focus": {
-			outline: "none",
-		},
-	},
+	addNewWordBtn: {},
 }));
 
 function AddWordToggler() {
@@ -62,12 +53,13 @@ function AddWordToggler() {
 
 	return (
 		<>
-			{/* Add word form's toggler - if there is a logged user */}
-			<IF condition={isUserLogged}>
-				<Fab onClick={handleTogglePopup} color="secondary" className={classes.addNewWordBtn}>
-					<PlusIcon className="h-8" />
-				</Fab>
-			</IF>
+			{/* Add word form's toggler */}
+			<SpeedDialAction
+				icon={<Add />}
+				tooltipTitle="Add Word"
+				FabProps={{ color: "secondary" }}
+				onClick={handleTogglePopup}
+			/>
 
 			{/* Add word popup */}
 			<PopUp {...PopUpProps}>

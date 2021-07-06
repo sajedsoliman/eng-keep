@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 // UI
 import { Fab, makeStyles, Slide } from "@material-ui/core";
+import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
 
 // icons
 import { ArrowUpward } from "@material-ui/icons";
@@ -11,9 +12,10 @@ import { ArrowUpward } from "@material-ui/icons";
 // styles
 const useStyles = makeStyles({
 	scrollTopBtn: {
-		position: "fixed",
+		/* 		position: "fixed",
 		bottom: 5,
 		left: 5,
+ */
 	},
 });
 
@@ -39,15 +41,15 @@ const ScrollTop = ({ wordListRef }) => {
 	};
 
 	return (
-		<Slide in={scrollTop} direction="up">
-			<Fab
-				color="primary"
-				size="small"
+		<Slide in={scrollTop} direction="left">
+			<SpeedDialAction
+				key="action-2"
+				open={true}
+				icon={<ArrowUpward />}
+				tooltipTitle="Add Word"
+				FabProps={{ color: "primary" }}
 				onClick={handleScrollWayTop}
-				className={classes.scrollTopBtn}
-			>
-				<ArrowUpward />
-			</Fab>
+			/>
 		</Slide>
 	);
 };

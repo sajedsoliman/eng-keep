@@ -34,8 +34,7 @@ import Header from "./header/Header";
 import Store from "../back-ends/Store";
 import { WordList } from "./word-list/WordList";
 import SearchBar from "./word-list/SearchBar";
-import AddWordToggler from "./AddWordToggler";
-import ScrollTopButton from "./ScrollTopButton";
+import AppControls from "./AppControls";
 
 // Style
 const useStyles = makeStyles((theme) => ({
@@ -286,11 +285,8 @@ export default function EngKeep() {
 				</section>
 			</Switch>
 
-			{/* Scroll to top button */}
-			<ScrollTopButton wordListRef={wordListRef} />
-
-			{/* New word form */}
-			<AddWordToggler />
+			{/* Controls - as a speed dial - add word, alanAI and scroll to top buttons  */}
+			{isUserLogged && <AppControls wordListRef={wordListRef} />}
 		</main>
 	);
 }

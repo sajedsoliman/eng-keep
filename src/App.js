@@ -45,9 +45,6 @@ export const siteMap = {
 function App() {
 	const loggedUser = AuthedUser();
 
-	// inject Alan Ai button
-	useAlan();
-
 	return (
 		<Switch>
 			<Route path="/words/:word">

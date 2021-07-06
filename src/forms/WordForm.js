@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 
 // UI
-import { Button } from "@material-ui/core";
+import { Button, IconButton } from "@material-ui/core";
 import Controls from "../common-components/controls/Controls";
+import SpeechToText from "../common-components/controls/SpeechToText";
 
 // Icons
 
@@ -21,22 +22,32 @@ import FormList from "../common-components/ui/form-list/FormList";
 export default function WordForm(props) {
 	const { wordData, handleClosePopup, action, wordDocId } = props;
 
-	const { sentences, synonyms, category, word } = wordData;
+	const { sentences, synonyms, category } = wordData;
 
 	// State vars
+	const [wordText, setWord] = useState(wordData.word);
 	const [sens, setSens] = useState(sentences);
 	const [syns, setSyns] = useState(synonyms);
 	const [needMoreInfo, setNeedMoreInfo] = useState(true);
 	const [wordAvailability, setWordAvailability] = useState("");
 
 	// Import useForm
-	const formInitialValues = { word, category };
+	const formInitialValues = { category };
 	const { values: wordInfo, inputCommonProps } = useForm(formInitialValues, false);
+
+	// Speech to text hook
+	const { listeningIcon, handleStartStopListening, text: result } = SpeechToText();
+
+	// add a listener for speech to text hooks
+	useEffect(() => {
+		// don't change it at the first render
+		if (result !== "") setWord(result);
+	}, [result]);
 
 	// blank the wordAvailability if the word changes
 	useEffect(() => {
 		setWordAvailability("");
-	}, [wordInfo.word]);
+	}, [wordText]);
 
 	// Sentences form list props
 	const sensFormListProps = {
@@ -61,9 +72,9 @@ export default function WordForm(props) {
 
 	// handle add the word
 	const handleSubmit = () => {
-		const word = {
+		const DBWord = {
 			category: wordInfo.category.toLowerCase(),
-			word: wordInfo.word.toLowerCase(),
+			word: wordText.toLowerCase(),
 			sentences: sens.filter((sentence) => sentence.body !== ""),
 			synonyms: syns.filter((synonym) => synonym.body !== ""),
 		};
@@ -72,16 +83,18 @@ export default function WordForm(props) {
 		handleClosePopup();
 
 		// Send it to database
+		if (wordText === "") return;
+
 		if (action === "update") {
-			handleUpdateWord(wordDocId, word);
+			handleUpdateWord(wordDocId, DBWord);
 		} else {
-			handleAddWord(word, needMoreInfo);
+			handleAddWord(DBWord, needMoreInfo);
 		}
 	};
 
 	// handle check word availability
 	const handleCheckWord = async () => {
-		const msg = `${!(await wordDicAbility(wordInfo.word)) ? "Not" : ""} Available`;
+		const msg = `${!(await wordDicAbility(wordText)) ? "Not" : ""} Available`;
 		setWordAvailability(msg);
 	};
 
@@ -91,11 +104,17 @@ export default function WordForm(props) {
 	return (
 		<Form onSubmit={handleSubmit}>
 			{/* Word input */}
-			<div className="mb-3">
+			<div className="mb-3 flex items-center space-x-2">
 				<Controls.TextInput
 					InputProps={{ autoFocus: true, autoComplete: "off" }}
-					{...inputCommonProps("Word", "word", wordInfo.word)}
+					label="Word"
+					inputChange={(e) => setWord(e.target.value)}
+					value={wordText}
 				/>
+
+				<IconButton color="primary" size="small" onClick={handleStartStopListening}>
+					{listeningIcon}
+				</IconButton>
 			</div>
 
 			{/* category input */}

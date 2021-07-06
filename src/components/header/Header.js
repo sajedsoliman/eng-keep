@@ -10,11 +10,15 @@ import { LoginIcon, LogoutIcon, UserAddIcon } from "@heroicons/react/outline";
 // Util
 import IF from "../../common-components/util/IF";
 
+// Hooks
+import useAlan from "../../hooks/useAlan";
+
 // Contexts
 import { AuthedUser } from "../../contexts/UserContext";
 
 // Components
 import Store from "../../back-ends/Store";
+import { createElement } from "react";
 
 // Styles
 const useStyles = makeStyles((theme) => ({
@@ -44,7 +48,7 @@ function Header() {
 			<Toolbar variant="dense">
 				{/* Login state (If there is no a user) */}
 				<IF condition={loggedUser == "no user"}>
-					<div className="flex flex-1 items-center space-x-2">
+					<div className="flex flex-1 items-center space-x-2 app-header">
 						<Button {...btnProps("primary", <LoginIcon className="h-6" />, "/signin")}>
 							<span className="text-gray-600">Login</span>
 						</Button>
@@ -64,6 +68,7 @@ function Header() {
 							</Avatar>
 							<h3 className="font-semibold ml-2">{loggedUser.fullName}</h3>
 						</div>
+
 						<IconButton color="secondary" onClick={handleSignOut}>
 							<LogoutIcon className="h-6" />
 						</IconButton>

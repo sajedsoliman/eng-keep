@@ -14,7 +14,7 @@ const COMMANDS = {
 	SAY_REVISION: "say-revision",
 };
 
-export default function useAlan() {
+export default function useAlan(container, open) {
 	const loggedUser = AuthedUser();
 
 	// Import Store component to get data from the database
@@ -78,18 +78,26 @@ export default function useAlan() {
 			document.querySelector(".alanBtn-root")?.remove();
 			setAlanInstance(null);
 		}
-		if (alanInstance != null || loggedUser === "no user") return;
-		setAlanInstance(
-			alanBtn({
-				bottom: "25px",
-				right: "25px",
-				key: process.env.REACT_APP_ALAN_KEY,
-				onCommand: ({ command, payload }) => {
-					window.dispatchEvent(new CustomEvent(command, { detail: payload }));
-				},
-			})
-		);
-	}, [loggedUser]);
 
-	return null;
+		if (loggedUser === "no user") return;
+		if (open)
+			setAlanInstance(
+				alanBtn({
+					bottom: 0,
+					right: 0,
+					position: "absolute",
+					key: process.env.REACT_APP_ALAN_KEY,
+					rootEl: document.querySelector(container),
+					onCommand: ({ command, payload }) => {
+						window.dispatchEvent(new CustomEvent(command, { detail: payload }));
+					},
+				})
+			);
+		else {
+			setAlanInstance(null);
+			document.querySelector(container).innerHTML = "";
+		}
+	}, [loggedUser, open]);
+
+	return alanInstance;
 }
