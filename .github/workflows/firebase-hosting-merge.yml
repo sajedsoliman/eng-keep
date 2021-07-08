@@ -9,6 +9,9 @@ name: Deploy to Firebase Hosting on merge
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+    env:
+      REACT_APP_ALAN_KEY: 64a555f83465265761f89b495134a00f2e956eca572e1d8b807a3e2338fdd0dc/prod
+      REACT_APP_UNSPLASH_CLIENT_ID: TqHrrRP8gQ3QEpkYb0wlgaTG70fWWEyh2oa6izj9ePk
     steps:
       - uses: actions/checkout@v2
       - run: npm ci && npm run build
