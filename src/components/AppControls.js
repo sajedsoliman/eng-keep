@@ -54,9 +54,6 @@ const AppControls = ({ wordListRef }) => {
 		setOpen(true);
 	};
 
-	// inject useAlan
-	const alanInstance = useAlan(".alanBtn_wrapper", open);
-
 	// set a listener for the word list scroll-to-top button
 	useEffect(() => {
 		wordListRef.current.addEventListener("scroll", (e) => {
@@ -106,10 +103,6 @@ const AppControls = ({ wordListRef }) => {
 					classes={{ fab: classes.addWordActionFab }}
 					onClick={handleTogglePopup}
 				/>
-
-				<div className="relative" style={{ minWidth: 40, minHeight: 40, margin: 8 }}>
-					<div className="alanBtn_wrapper"></div>
-				</div>
 
 				{/* Scroll to top button */}
 				{scrollTop && (

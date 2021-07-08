@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback } from "react";
 import alanBtn from "@alan-ai/alan-sdk-web";
 
 // Contexts
@@ -14,16 +14,10 @@ const COMMANDS = {
 	SAY_REVISION: "say-revision",
 };
 
-export default function useAlan(container, open) {
+export default function useAlan() {
 	const loggedUser = AuthedUser();
 
-	// Import Store component to get data from the database
-	const { handleGetWordListByDate } = Store();
-
-	// Refs
-	const alanBtnContainer = useRef();
-
-	const [alanInstance, setAlanInstance] = useState();
+	const [alanInstance, setAlanInstance] = useState(null);
 
 	// Import store component to handle adding new words
 	const { handleAddWord } = Store();
@@ -79,25 +73,19 @@ export default function useAlan(container, open) {
 			setAlanInstance(null);
 		}
 
-		if (loggedUser === "no user") return;
-		if (open)
-			setAlanInstance(
-				alanBtn({
-					bottom: 0,
-					right: 0,
-					position: "absolute",
-					key: process.env.REACT_APP_ALAN_KEY,
-					rootEl: document.querySelector(container),
-					onCommand: ({ command, payload }) => {
-						window.dispatchEvent(new CustomEvent(command, { detail: payload }));
-					},
-				})
-			);
-		else {
-			setAlanInstance(null);
-			document.querySelector(container).innerHTML = "";
-		}
-	}, [loggedUser, open]);
+		if (loggedUser === "no user" || alanInstance !== null) return;
+
+		setAlanInstance(
+			alanBtn({
+				bottom: 15,
+				left: 15,
+				key: process.env.REACT_APP_ALAN_KEY,
+				onCommand: ({ command, payload }) => {
+					window.dispatchEvent(new CustomEvent(command, { detail: payload }));
+				},
+			})
+		);
+	}, [loggedUser]);
 
 	return alanInstance;
 }
