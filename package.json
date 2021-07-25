@@ -80,10 +80,11 @@
 				"compiler": "-"
 			}
 		},
+		
 		"src/*.scss": {
 			"env": {
 				"compiler": "-"
 			}
 		}
-	},
+	}
 }
