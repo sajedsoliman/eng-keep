@@ -12,6 +12,8 @@ function SearchBar({
 	const handleGoToWord = () => {
 		const goToWord = query === "" ? localStorage.getItem("last-word") : query;
 
+		if (goToWord === null) return;
+
 		const queryIndex =
 			wordList.findIndex(({ word }) => word.word === goToWord) + 1;
 		setLimit(queryIndex + 1);

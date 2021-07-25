@@ -39,7 +39,7 @@
 	},
 	"scripts": {
 		"start": "rm -rf tsconfig.json && env-cmd -f .env.staging react-scripts start",
-		"build": "CI=false react-scripts build",
+		"build": "react-scripts build",
 		"build:prod": "env-cmd -f .env.prod react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"
@@ -85,5 +85,8 @@
 				"compiler": "-"
 			}
 		}
+	},
+	"optionalDependencies": {
+		"fsevents": "^2.3.2"
 	}
 }

@@ -4,13 +4,21 @@ import { useState } from "react";
 import { Button } from "@material-ui/core";
 import Controls from "../common-components/controls/Controls";
 // icons
-import { Save, SaveOutlined } from "@material-ui/icons";
+import { SaveOutlined } from "@material-ui/icons";
 
 // components
 import { Form } from "../hooks/useForm";
 
 // helpers
 import StoreHelpers from "../back-ends/HelperFunctions";
+
+function getDefaultValue() {
+	const savedWord = localStorage.getItem("last-word");
+
+	if (savedWord === null) return "";
+
+	return savedWord;
+}
 
 function LastRevisedWordFrom({ closePopup }) {
 	const [word, setWord] = useState("");
@@ -30,7 +38,7 @@ function LastRevisedWordFrom({ closePopup }) {
 
 		if (isExisted) {
 			// save it
-			localStorage.setItem("last-word", word);
+			localStorage.setItem("last-word", word.toLowerCase());
 
 			// close popup
 			closePopup();
@@ -44,7 +52,10 @@ function LastRevisedWordFrom({ closePopup }) {
 			<Controls.TextInput
 				value={word}
 				inputChange={changeWord}
-				placeholder="Your last revised word"
+				placeholder={`Your last revised word ${
+					getDefaultValue() !== "" && ": " + getDefaultValue()
+				}`}
+				inputProps={{ autoFocus: true }}
 			/>
 
 			<div className="mt-3">
