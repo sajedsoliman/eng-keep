@@ -14,7 +14,7 @@ jobs:
       REACT_APP_UNSPLASH_CLIENT_ID: TqHrrRP8gQ3QEpkYb0wlgaTG70fWWEyh2oa6izj9ePk
     steps:
       - uses: actions/checkout@v2
-      - run: npm i -f && npm run build
+      - run: CI=false npm i && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
