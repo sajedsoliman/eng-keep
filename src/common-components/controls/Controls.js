@@ -1,5 +1,4 @@
 import SearchBox from "./SearchBox";
-import TextInput from "./TextInput";
 import TextArea from "./TextArea";
 import FilePondUploader from "./FilePondUploader";
 import PasswordInput from "./PasswordInput";
@@ -8,11 +7,12 @@ import RadioGroup from "./RadioGroup";
 import ReusableCheckBox from "./ReusableCheckBox";
 import Toggler from "./Toggler";
 import SelectBoxInput from "./SelectBoxInput";
+import TextInput from "./TextInput";
 
 const Controls = {
 	SearchBox,
-	TextInput,
 	TextArea,
+	TextInput,
 	FilePondUploader,
 	PasswordInput,
 	FilePondCircular,

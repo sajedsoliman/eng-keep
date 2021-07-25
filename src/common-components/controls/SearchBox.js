@@ -6,17 +6,17 @@ import clsx from "clsx";
 // styles
 const useStyles = makeStyles((theme) => ({
 	searchInput: {
-		"& .MuiInputBase-root.Mui-focused": {
+		/* 		"& .MuiInputBase-root.Mui-focused": {
 			"& input": {
 				width: 230,
 			},
 		},
-
+ */
 		"& .MuiOutlinedInput-inputMarginDense": {
-			width: 200,
+			// width: 200,
 			paddingTop: "7.5px",
 			paddingBottom: "7.5px",
-			transition: theme.transitions.create("width", { duration: 250 }),
+			// transition: theme.transitions.create("width", { duration: 250 }),
 		},
 	},
 }));

@@ -78,7 +78,9 @@ export default function EngKeep() {
 	const routerLocation = useLocation();
 
 	// Set the tab depending on the current router path
-	const routerTab = homepageTabs.findIndex((tab) => tab.path === routerLocation.pathname);
+	const routerTab = homepageTabs.findIndex(
+		(tab) => tab.path === routerLocation.pathname
+	);
 
 	// State vars
 	const [currentTab, setCurrentTab] = useState(routerTab);
@@ -89,7 +91,11 @@ export default function EngKeep() {
 	const [query, setQuery] = useState("");
 
 	// Import Store component to fetch the word list
-	const { handleGetWordListOnCategory, handleGetWholeWordList, handleGetWordListByDate } = Store();
+	const {
+		handleGetWordListOnCategory,
+		handleGetWholeWordList,
+		handleGetWordListByDate,
+	} = Store();
 
 	// set a listener to get the last opened word (in localStorage) to scroll to it
 	useLayoutEffect(() => {
@@ -162,7 +168,9 @@ export default function EngKeep() {
 	useEffect(() => {
 		if (wordList !== null) {
 			const wordRegex = new RegExp(query, "i");
-			const filteredList = wordList.filter((wordDoc) => wordDoc.word.word.search(wordRegex) !== -1);
+			const filteredList = wordList.filter(
+				(wordDoc) => wordDoc.word.word.search(wordRegex) !== -1
+			);
 			setFilteredWordList(filteredList);
 		}
 	}, [wordList]);
@@ -176,7 +184,9 @@ export default function EngKeep() {
 
 		// startTransition the list value
 		const wordRegex = new RegExp(value, "i");
-		const filteredList = wordList.filter((wordDoc) => wordDoc.word.word.search(wordRegex) !== -1);
+		const filteredList = wordList.filter(
+			(wordDoc) => wordDoc.word.word.search(wordRegex) !== -1
+		);
 
 		setFilteredWordList(filteredList);
 	};
@@ -229,7 +239,11 @@ export default function EngKeep() {
 			<Header />
 
 			{/* App Tabs => done */}
-			<HomepageTabs handleChangePeriod={handleChangePeriod} period={period} {...tabsProps} />
+			<HomepageTabs
+				handleChangePeriod={handleChangePeriod}
+				period={period}
+				{...tabsProps}
+			/>
 
 			{/* Each tab content depending on the current tab */}
 			<Switch>
@@ -239,16 +253,26 @@ export default function EngKeep() {
 						condition={
 							!isUserLogged &&
 							// This condition is to hide the search bar in signin & register pages
-							!Object.values(NON_SEARCHABLE_PATHS).includes(routerLocation.pathname)
+							!Object.values(NON_SEARCHABLE_PATHS).includes(
+								routerLocation.pathname
+							)
 						}
 					>
-						<h2 className="font-medium text-lg text-center">Log in to add &amp; see words</h2>
+						<h2 className="font-medium text-lg text-center">
+							Log in to add &amp; see words
+						</h2>
 					</IF>
 
 					{/* Search Box - if the path is anything but word-listed tabs (all, new, pronunciation) */}
 					{/* Anything but a single word page */}
 					<IF condition={isSearchDisplay}>
-						<SearchBar query={query} handleChangeQuery={handleChangeQuery} />
+						<SearchBar
+							wordList={wordList}
+							setFilteredList={setFilteredWordList}
+							setLimit={setLimit}
+							query={query}
+							handleChangeQuery={handleChangeQuery}
+						/>
 					</IF>
 
 					{/* a switch to move between tabs */}
@@ -273,11 +297,17 @@ export default function EngKeep() {
 					<IF
 						condition={
 							// The third condition is for single page
-							thereMore && haveResult && Object.values(PATHS).includes(routerLocation.pathname)
+							thereMore &&
+							haveResult &&
+							Object.values(PATHS).includes(routerLocation.pathname)
 						}
 					>
 						<div className="text-center mt-3">
-							<IconButton onClick={() => setLimit((prev) => prev + DEFAULT_WORD_LIST_LIMIT)}>
+							<IconButton
+								onClick={() =>
+									setLimit((prev) => prev + DEFAULT_WORD_LIST_LIMIT)
+								}
+							>
 								<ArrowDownIcon className="h-5 text-blue-600" />
 							</IconButton>
 						</div>

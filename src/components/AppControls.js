@@ -11,10 +11,10 @@ import { Add, ArrowUpward, Close, Menu } from "@material-ui/icons";
 import { wordDataInitialValues } from "../helpers/info";
 
 // hooks
-import useAlan from "../hooks/useAlan";
 
 // components
 import WordForm from "../forms/WordForm";
+import LastRevisedWordFrom from "../forms/LastRevisedWordFrom";
 
 const useStyles = makeStyles((theme) => ({
 	speedDial: {
@@ -45,6 +45,7 @@ const AppControls = ({ wordListRef }) => {
 	const [open, setOpen] = useState(false);
 	const [scrollTop, setScrollTop] = useState(false);
 	const [addWordFormPopupOpen, setPopupOpen] = useState(false);
+	const [openRevised, setRevisedOpen] = useState(false);
 
 	const handleClose = () => {
 		setOpen(false);
@@ -74,13 +75,29 @@ const AppControls = ({ wordListRef }) => {
 		setPopupOpen((prev) => !prev);
 	};
 
-	// popup props
+	// handle toggle last revised word form popup
+	const toggleRevisedWordPopup = () => {
+		setRevisedOpen((isOpen) => !isOpen);
+	};
+
+	// add new word popup props
 	const PopUpProps = {
 		infoFunc: {
 			title: "Add a new word",
 			isOpen: addWordFormPopupOpen,
 		},
 		closeHandle: handleTogglePopup,
+		maxWidth: "sm",
+		dividers: true,
+	};
+
+	// add last revised word popup props
+	const revisedPopupProps = {
+		infoFunc: {
+			title: "Add last revised word",
+			isOpen: openRevised,
+		},
+		closeHandle: toggleRevisedWordPopup,
 		maxWidth: "sm",
 		dividers: true,
 	};
@@ -104,6 +121,13 @@ const AppControls = ({ wordListRef }) => {
 					onClick={handleTogglePopup}
 				/>
 
+				{/* Add last word I revised form's toggler */}
+				<SpeedDialAction
+					icon={<Add />}
+					tooltipTitle="Add last revised word"
+					onClick={toggleRevisedWordPopup}
+				/>
+
 				{/* Scroll to top button */}
 				{scrollTop && (
 					<SpeedDialAction
@@ -122,6 +146,12 @@ const AppControls = ({ wordListRef }) => {
 					wordData={wordDataInitialValues}
 					handleClosePopup={handleTogglePopup}
 				/>
+			</PopUp>
+
+			{/* Add last word I revised popup */}
+			<PopUp {...revisedPopupProps}>
+				{/* last revised word form */}
+				<LastRevisedWordFrom closePopup={toggleRevisedWordPopup} />
 			</PopUp>
 		</div>
 	);
