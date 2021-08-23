@@ -48,7 +48,9 @@ export default function useAlan() {
 					const todays_words = snapshot.docs.map((doc) => doc.data());
 					todays_words.forEach((wordObj) => {
 						const wannaSayExample =
-							detail.wannaSayExample === "yes" ? `example: ${wordObj.sentences[0].body}` : "";
+							detail.wannaSayExample === "yes"
+								? `example: ${wordObj.sentences[0].body}`
+								: "";
 						alanInstance.playText(`${wordObj.word}. ${wannaSayExample}`);
 					});
 				});

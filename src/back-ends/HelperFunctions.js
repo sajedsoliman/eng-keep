@@ -27,14 +27,17 @@ function Helpers() {
 		const wordObj = data[0];
 		if (wordObj === undefined) return "word does not exist";
 
-		const audioSrc = wordObj.phonetics.length != 0 ? wordObj.phonetics[0].audio : "";
-		const definitions = wordObj.meanings.map((meaning) => meaning.definitions).flat();
+		const audioSrc =
+			wordObj.phonetics.length != 0 ? wordObj.phonetics[0].audio : "";
+		const definitions = wordObj.meanings
+			.map((meaning) => meaning.definitions)
+			.flat();
 		const exampleSentences = [];
 		const synonyms = [];
 
 		definitions.forEach((definition) => {
 			const example = definition.example;
-			const synms = definition.synonyms;
+			const synms = definition.synonyms || [];
 			// Get example sentences
 			if (example != undefined || example != null) {
 				exampleSentences.push({
@@ -42,13 +45,13 @@ function Helpers() {
 					id: new Date().getTime() * Math.random(),
 				});
 			}
-			// Get synonyms
+			// Get arrays of synonyms
 			if (synms != undefined || synms != null) {
 				synonyms.push(synms);
 			}
 		});
 
-		// get the audio src for each synonym
+		// flat all synonym arrays into one array
 		const fullSynonyms = synonyms.flat().map((syn) => ({
 			body: syn,
 			id: new Date().getTime() * Math.random(),
@@ -99,6 +102,7 @@ function Helpers() {
 			.where("word", "==", word)
 			.get()
 			.then((snapshot) => {
+				console.log(snapshot);
 				return !snapshot.empty;
 			});
 	};

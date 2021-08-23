@@ -50,12 +50,17 @@ function Store() {
 			setItemsCount(snapshot.docs.length);
 		}); */
 
-		return categoryQueryRef.orderBy("timestamp", "desc").onSnapshot((snapshot) => {
-			const words = snapshot.docs.map((doc) => ({ id: doc.id, word: doc.data() }));
+		return categoryQueryRef
+			.orderBy("timestamp", "desc")
+			.onSnapshot((snapshot) => {
+				const words = snapshot.docs.map((doc) => ({
+					id: doc.id,
+					word: doc.data(),
+				}));
 
-			setList(words);
-			// setLoading(false);
-		});
+				setList(words);
+				// setLoading(false);
+			});
 	};
 
 	// Get the whole word list
@@ -77,7 +82,10 @@ function Store() {
 			.collection("user-words")
 			.orderBy("timestamp", "desc")
 			.onSnapshot((snapshot) => {
-				const words = snapshot.docs.map((doc) => ({ id: doc.id, word: doc.data() }));
+				const words = snapshot.docs.map((doc) => ({
+					id: doc.id,
+					word: doc.data(),
+				}));
 
 				setList(words);
 			});
@@ -104,7 +112,10 @@ function Store() {
 		}); */
 
 		return dateQueryRef.onSnapshot((snapshot) => {
-			const words = snapshot.docs.map((doc) => ({ id: doc.id, word: doc.data() }));
+			const words = snapshot.docs.map((doc) => ({
+				id: doc.id,
+				word: doc.data(),
+			}));
 
 			setList(words);
 		});
@@ -118,7 +129,9 @@ function Store() {
 			await res.json(); /* Return an array of words, so I need to target the first one below */
 		const wordObj = data[0];
 		const phonetic =
-			wordObj !== undefined && wordObj.phonetics.length !== 0 ? wordObj.phonetics[0] : null;
+			wordObj !== undefined && wordObj.phonetics.length !== 0
+				? wordObj.phonetics[0]
+				: null;
 
 		return phonetic === null ? "" : phonetic.audio;
 	};
@@ -130,10 +143,14 @@ function Store() {
 		// Check for the word existence
 		const isExisted = await isWordExisted(word);
 
-		if (isExisted) return processSettings("error", `You added this word (${word}) before`);
+		if (isExisted)
+			return processSettings("error", `You added this word (${word}) before`);
 
 		// The sentences that I provide must be highlighted, so I provide an extra prop here
-		const mySentences = sentences.map((sentence) => ({ ...sentence, userProvided: true }));
+		const mySentences = sentences.map((sentence) => ({
+			...sentence,
+			userProvided: true,
+		}));
 
 		let dbWord = {
 			timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -153,9 +170,7 @@ function Store() {
 			const moreInfo = await handleGetMoreWordInfo(wordData.word);
 
 			dbWord = {
-				timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-				word,
-				category,
+				...dbWord,
 				images,
 				...(moreInfo === "word does not exist" || !needMoreInfo
 					? {
@@ -171,17 +186,28 @@ function Store() {
 			};
 		}
 
-		db.collection("users").doc(loggedUser.id).collection("user-words").add(dbWord);
+		db.collection("users")
+			.doc(loggedUser.id)
+			.collection("user-words")
+			.add(dbWord);
 	};
 
 	// Handle delete word by id
 	const handleDeleteWord = (id) => {
-		db.collection("users").doc(loggedUser.id).collection("user-words").doc(id).delete();
+		db.collection("users")
+			.doc(loggedUser.id)
+			.collection("user-words")
+			.doc(id)
+			.delete();
 	};
 
 	// Handle update a certain word by id
 	const handleUpdateWord = (id, newWordData) => {
-		db.collection("users").doc(loggedUser.id).collection("user-words").doc(id).update(newWordData);
+		db.collection("users")
+			.doc(loggedUser.id)
+			.collection("user-words")
+			.doc(id)
+			.update(newWordData);
 	};
 
 	// Handle register a user

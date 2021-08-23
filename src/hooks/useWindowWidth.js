@@ -17,7 +17,7 @@ function useWindowWidth() {
 		return () => {
 			window.removeEventListener("resize", onResize);
 		};
-	}, []);
+	}, [onResize]);
 
 	return { windowWidth };
 }

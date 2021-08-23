@@ -33,10 +33,17 @@ export default function WordForm(props) {
 
 	// Import useForm
 	const formInitialValues = { category };
-	const { values: wordInfo, inputCommonProps } = useForm(formInitialValues, false);
+	const { values: wordInfo, inputCommonProps } = useForm(
+		formInitialValues,
+		false
+	);
 
 	// Speech to text hook
-	const { listeningIcon, handleStartStopListening, text: result } = SpeechToText();
+	const {
+		listeningIcon,
+		handleStartStopListening,
+		text: result,
+	} = SpeechToText();
 
 	// add a listener for speech to text hooks
 	useEffect(() => {
@@ -99,7 +106,8 @@ export default function WordForm(props) {
 	};
 
 	// Word availability style
-	const availabilityMsgStyle = wordAvailability == "Available" ? "green" : "red";
+	const availabilityMsgStyle =
+		wordAvailability == "Available" ? "green" : "red";
 
 	return (
 		<Form onSubmit={handleSubmit}>
@@ -112,7 +120,11 @@ export default function WordForm(props) {
 					value={wordText}
 				/>
 
-				<IconButton color="primary" size="small" onClick={handleStartStopListening}>
+				<IconButton
+					color="primary"
+					size="small"
+					onClick={handleStartStopListening}
+				>
 					{listeningIcon}
 				</IconButton>
 			</div>
@@ -143,11 +155,18 @@ export default function WordForm(props) {
 					</Button>
 
 					<div className="flex items-center">
-						<Button onClick={handleCheckWord} type="button" color="primary" variant="outlined">
+						<Button
+							onClick={handleCheckWord}
+							type="button"
+							color="primary"
+							variant="outlined"
+						>
 							<span className="capitalize">Dic. Check</span>
 						</Button>
 
-						<p className={`ml-2 text-sm text-${availabilityMsgStyle}-600`}>{wordAvailability}</p>
+						<p className={`ml-2 text-sm text-${availabilityMsgStyle}-600`}>
+							{wordAvailability}
+						</p>
 					</div>
 				</div>
 				{/* a switch for (more info) need */}

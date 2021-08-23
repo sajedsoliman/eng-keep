@@ -4,26 +4,15 @@ import { useEffect, useState } from "react";
 import { Grid, IconButton, Tooltip } from "@material-ui/core";
 
 // Icons
-import { RefreshIcon, VolumeUpIcon } from "@heroicons/react/outline";
+import { RefreshIcon } from "@heroicons/react/outline";
 
 // Info & functions
 import { removeDuplicatedObjsInArr } from "../../helpers/functions";
 
 // Components
-import Store from "../../back-ends/Store";
+import { WordSynonym } from "./WordSynonym";
 
 function WordSynonyms({ synonyms }) {
-	// Store component
-	const { handleGetAudioSrc } = Store();
-
-	// Handle speak synonyms
-	const handleSpeakSynonym = async (word) => {
-		const audioSrc = await handleGetAudioSrc(word);
-		const audioEl = document.createElement("audio");
-		audioEl.src = audioSrc;
-		audioEl.play();
-	};
-
 	// State vars
 	// for synonyms so that i can handle refreshing it
 	const [syns, setSyns] = useState(synonyms);
@@ -44,15 +33,9 @@ function WordSynonyms({ synonyms }) {
 	// Map through synonyms
 	const mappedSynonyms = removeDuplicatedObjsInArr(syns, "body")
 		.slice(0, 3)
-		.map(({ body, id }) => (
-			<li key={id} className="flex items-center">
-				<VolumeUpIcon
-					onClick={() => handleSpeakSynonym(body)}
-					className="h-5 mr-2 cursor-pointer text-red-400"
-				/>
-				{body}
-			</li>
-		));
+		.map(({ body, id }) => {
+			return <WordSynonym key={id} body={body} />;
+		});
 
 	return (
 		<Grid item>
@@ -64,7 +47,7 @@ function WordSynonyms({ synonyms }) {
 					</IconButton>
 				</Tooltip>
 			</h4>
-			<ul>{mappedSynonyms}</ul>
+			<ul className="flex flex-col space-y-0.5">{mappedSynonyms}</ul>
 		</Grid>
 	);
 }

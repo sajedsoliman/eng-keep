@@ -27,12 +27,16 @@ function getDateOnPeriod(period) {
 			currDate.setMonth(period.getMonth());
 			currDate.setFullYear(period.getFullYear());
 			endDate = new Date(
-				`${period.getFullYear()}-${period.getMonth() + 1}-${period.getDate() + 1}`
+				`${period.getFullYear()}-${period.getMonth() + 1}-${
+					period.getDate() + 1
+				}`
 			);
 	}
 
 	const startDate = new Date(
-		`${currDate.getFullYear()}-${currDate.getMonth() + 1}-${currDate.getDate()}`.replace(/\//g, "-")
+		`${currDate.getFullYear()}-${
+			currDate.getMonth() + 1
+		}-${currDate.getDate()}`.replace(/\//g, "-")
 	);
 	return { startDate, endDate };
 }
@@ -40,7 +44,8 @@ function getDateOnPeriod(period) {
 const userValidation = (firedInput, setErrors) => {
 	const errors = {};
 	const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-	const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?=.*[a-zA-Z]).{8,}$/;
+	const passwordRegex =
+		/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?=.*[a-zA-Z]).{8,}$/;
 	const nameRegex = /^(?=.*\d)*(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/;
 	const usernameRegex = /^(?=.*\d)*(?=.*[a-z])(?=.*[a-zA-Z]).{5,}$/;
 	const webUrlRegex =
@@ -58,10 +63,16 @@ const userValidation = (firedInput, setErrors) => {
 		);
 	}
 	if ("email" in firedInput) {
-		errors.email = valCond(emailRegex.test(firedInput.email), "Email is badly formatted");
+		errors.email = valCond(
+			emailRegex.test(firedInput.email),
+			"Email is badly formatted"
+		);
 	}
 	if ("password" in firedInput) {
-		errors.password = valCond(passwordRegex.test(firedInput.password), "Password isn't strong");
+		errors.password = valCond(
+			passwordRegex.test(firedInput.password),
+			"Password isn't strong"
+		);
 	}
 	if ("website" in firedInput) {
 		errors.website = valCond(
@@ -82,9 +93,11 @@ const valCond = (condition, errMsg) => {
 
 // DuplicatableKey => the key that may duplicate in the objects and causes them to duplicate
 const removeDuplicatedObjsInArr = (array, duplicatableKey) => {
-	const keys = array.map((key) => key[duplicatableKey]);
+	const keys = array.map((obj) => obj[duplicatableKey]);
 	const refinedKeys = [...new Set(keys)];
-	const finalArray = refinedKeys.map((key) => array.find((item) => item[duplicatableKey] === key));
+	const finalArray = refinedKeys.map((key) =>
+		array.find((item) => item[duplicatableKey] === key)
+	);
 
 	return finalArray;
 };
